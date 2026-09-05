@@ -195,21 +195,37 @@ function HomeScreen() {
         </Link>
 
         <div className="bg-[#d6d9dd]">
-          <div className="flex items-center justify-between px-4 py-3.5">
+          <button
+            type="button"
+            onClick={() => setTopUpOpen((v) => !v)}
+            aria-expanded={topUpOpen}
+            aria-controls="top-up-options"
+            className="flex w-full items-center justify-between px-4 py-3.5 text-left"
+          >
             <span className="text-[15px] font-semibold text-black">Top up your account</span>
-            <ChevronUp className="size-5 text-black" strokeWidth={2.2} />
-          </div>
-          <TopUpRow
-            art="cashapp"
-            title="Use Cash App, Paypal or Venmo"
-            badge="instant"
-            to="/fund-apps"
-          />
-          <div className="mx-4 h-px bg-black/10" />
-          <TopUpRow art="depositCash" title="Deposit Cash" badge="instant" to="/add-cash" />
-          <div className="mx-4 h-px bg-black/10" />
-          <TopUpRow art="bankTransfer" title="Bank Transfer" badge="days" to="/transfer" />
+            <ChevronUp
+              className={`size-5 text-black transition-transform duration-200 ${
+                topUpOpen ? "" : "rotate-180"
+              }`}
+              strokeWidth={2.2}
+            />
+          </button>
+          {topUpOpen ? (
+            <div id="top-up-options" className="animate-fade-in">
+              <TopUpRow
+                art="cashapp"
+                title="Use Cash App, Paypal or Venmo"
+                badge="instant"
+                to="/fund-apps"
+              />
+              <div className="mx-4 h-px bg-black/10" />
+              <TopUpRow art="depositCash" title="Deposit Cash" badge="instant" to="/add-cash" />
+              <div className="mx-4 h-px bg-black/10" />
+              <TopUpRow art="bankTransfer" title="Bank Transfer" badge="days" to="/transfer" />
+            </div>
+          ) : null}
         </div>
+
       </div>
 
       <Link
