@@ -1,10 +1,11 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowLeft, Check, ChevronRight, Delete, Info, User } from "lucide-react";
-import { ledger, useBalance, usd } from "@/lib/ledger";
+import { ArrowLeft, Check, ChevronRight, Clock, Delete, Info, User } from "lucide-react";
+import { bicFee, isPendingAmount, ledger, useBalance, usd } from "@/lib/ledger";
 import heroTex from "@/assets/varo/send-hero-tex.png.asset.json";
 import flashlight from "@/assets/varo/flashlight.png.asset.json";
 import handsClap from "@/assets/varo/hands-clap.png.asset.json";
+
 
 export const Route = createFileRoute("/send-money")({
   head: () => ({
@@ -84,9 +85,13 @@ function SendMoneyScreen() {
 
   const amountValue = Number(cents || "0") / 100;
   const amount = amountValue.toLocaleString("en-US", { style: "currency", currency: "USD" });
+  const fee = bicFee(amountValue);
+  const total = amountValue + fee;
+  const pending = isPendingAmount(amountValue);
   const belowMin = amountValue > 0 && amountValue < 1;
-  const overBalance = amountValue > balance;
+  const overBalance = total > balance;
   const canSend = amountValue >= 1 && !overBalance;
+
 
   function press(k: string) {
     if (k === "del") setCents((c) => c.slice(0, -1));
@@ -253,8 +258,9 @@ function SendMoneyScreen() {
             ["From", "Varo Bank Account • 3046"],
             ["To", recipient?.detail ?? displayName],
             ["For", note.trim() || "—"],
-            ["Arrives", "Instantly"],
-            ["Fee", "$0.00"],
+            ["Arrives", pending ? "After review" : "Instantly"],
+            ["BIC Fee", usd(fee)],
+            ["Total", usd(total)],
           ].map(([label, value]) => (
             <div
               key={label}
@@ -269,8 +275,11 @@ function SendMoneyScreen() {
         </div>
 
         <p className="px-4 pt-5 text-[13px] leading-[1.4] text-[#6f7075]">
-          By sending, you agree this transfer can't be cancelled once it's on its way.
+          {pending
+            ? `Transfers of $1,000.00 and above are held as pending while we review them. A BIC fee of ${usd(fee)} applies to this transfer.`
+            : "By sending, you agree this transfer can't be cancelled once it's on its way."}
         </p>
+
 
         <div className="mt-auto space-y-3 px-4 pt-8 pb-6">
           <button
@@ -296,20 +305,42 @@ function SendMoneyScreen() {
     return (
       <div className="flex min-h-screen flex-col bg-white px-6 pt-16 pb-8">
         <div className="flex flex-col items-center text-center">
-          <span className="grid size-[72px] place-items-center rounded-full bg-lime">
-            <Check className="size-9 text-primary" strokeWidth={3} />
+          <span
+            className={`grid size-[72px] place-items-center rounded-full ${pending ? "bg-[#fdf0cf]" : "bg-lime"}`}
+          >
+            {pending ? (
+              <Clock className="size-9 text-[#8a6300]" strokeWidth={2.6} />
+            ) : (
+              <Check className="size-9 text-primary" strokeWidth={3} />
+            )}
           </span>
-          <h1 className="varo-title mt-6 text-[28px] text-black">MONEY SENT</h1>
+          <h1 className="varo-title mt-6 text-[28px] text-black">
+            {pending ? "PAYMENT PENDING" : "MONEY SENT"}
+          </h1>
           <p className="mt-2 text-[17px] text-black">
             {amount} to {displayName}
           </p>
           {note.trim() ? (
             <p className="mt-1 text-[15px] text-[#6f7075]">For {note.trim()}</p>
           ) : null}
+          {pending ? (
+            <>
+              <span className="mt-4 rounded-full bg-[#fdf0cf] px-3 py-1 text-[13px] font-bold text-[#8a6300]">
+                Pending review
+              </span>
+              <p className="mt-4 px-2 text-[15px] leading-[1.4] text-[#6f7075]">
+                We're reviewing this transfer. It stays pending until the review is complete.
+              </p>
+            </>
+          ) : null}
+          {fee ? (
+            <p className="mt-3 text-[15px] text-[#6f7075]">BIC fee {usd(fee)} · total {usd(total)}</p>
+          ) : null}
           <p className="mt-6 text-[15px] text-[#6f7075]">
             New available balance {usd(ledger.getBalance())}
           </p>
         </div>
+
 
         <div className="mt-auto space-y-3">
           <button

@@ -118,14 +118,22 @@ function RecentTransactions({ tab }: { tab: Tab }) {
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-[16px] text-black">{t.name}</span>
-                        <span className="block truncate text-[14px] text-[#6f7075]">
-                          {t.note ? `${t.note} \u00b7 ` : ""}
-                          {txnDate(t.date)}
+                        <span className="flex items-center gap-2 truncate text-[14px] text-[#6f7075]">
+                          {t.status === "pending" ? (
+                            <span className="rounded-full bg-[#fdf0cf] px-2 py-[1px] text-[12px] font-bold text-[#8a6300]">
+                              Pending
+                            </span>
+                          ) : null}
+                          <span className="truncate">
+                            {t.note ? `${t.note} \u00b7 ` : ""}
+                            {txnDate(t.date)}
+                          </span>
                         </span>
                       </span>
                       <span className="text-[17px] font-bold text-black">
                         {t.amount < 0 ? `-${usd(Math.abs(t.amount))}` : `+${usd(t.amount)}`}
                       </span>
+
                       <ChevronRight className="size-[20px] shrink-0 text-[#8b8b90]" strokeWidth={2.4} />
                     </Link>
                   </li>
