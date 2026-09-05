@@ -30,6 +30,7 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SplashRouteImport } from './routes/splash'
 import { Route as TransferRouteImport } from './routes/transfer'
 import { Route as VaroCardsRouteImport } from './routes/varo-cards'
+import { Route as TransactionIdRouteImport } from './routes/transaction.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -136,6 +137,11 @@ const VaroCardsRoute = VaroCardsRouteImport.update({
   path: '/varo-cards',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TransactionIdRoute = TransactionIdRouteImport.update({
+  id: '/transaction/$id',
+  path: '/transaction/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -159,6 +165,7 @@ export interface FileRoutesByFullPath {
   '/splash': typeof SplashRoute
   '/transfer': typeof TransferRoute
   '/varo-cards': typeof VaroCardsRoute
+  '/transaction/$id': typeof TransactionIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -182,6 +189,7 @@ export interface FileRoutesByTo {
   '/splash': typeof SplashRoute
   '/transfer': typeof TransferRoute
   '/varo-cards': typeof VaroCardsRoute
+  '/transaction/$id': typeof TransactionIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -206,6 +214,7 @@ export interface FileRoutesById {
   '/splash': typeof SplashRoute
   '/transfer': typeof TransferRoute
   '/varo-cards': typeof VaroCardsRoute
+  '/transaction/$id': typeof TransactionIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -231,6 +240,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/transfer'
     | '/varo-cards'
+    | '/transaction/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -254,6 +264,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/transfer'
     | '/varo-cards'
+    | '/transaction/$id'
   id:
     | '__root__'
     | '/'
@@ -277,6 +288,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/transfer'
     | '/varo-cards'
+    | '/transaction/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -301,6 +313,7 @@ export interface RootRouteChildren {
   SplashRoute: typeof SplashRoute
   TransferRoute: typeof TransferRoute
   VaroCardsRoute: typeof VaroCardsRoute
+  TransactionIdRoute: typeof TransactionIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -452,6 +465,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VaroCardsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/transaction/$id': {
+      id: '/transaction/$id'
+      path: '/transaction/$id'
+      fullPath: '/transaction/$id'
+      preLoaderRoute: typeof TransactionIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -477,6 +497,7 @@ const rootRouteChildren: RootRouteChildren = {
   SplashRoute: SplashRoute,
   TransferRoute: TransferRoute,
   VaroCardsRoute: VaroCardsRoute,
+  TransactionIdRoute: TransactionIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
