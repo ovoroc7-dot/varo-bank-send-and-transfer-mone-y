@@ -59,7 +59,7 @@ function SendMoneyScreen() {
   const displayName = nickname.trim() || recipient?.name || "Recipient";
 
   function send() {
-    if (amountValue < 1) return;
+    if (!canSend) return;
     ledger.addSent({ name: displayName, note: note.trim(), amount: amountValue });
     setStep("sent");
   }
@@ -231,6 +231,63 @@ function SendMoneyScreen() {
             </div>
           </>
         )}
+      </div>
+    );
+  }
+
+  if (step === "review") {
+    return (
+      <div className="flex min-h-screen flex-col bg-white">
+        <header className="flex items-center gap-4 px-4 pt-5 pb-4">
+          <button type="button" aria-label="Back" onClick={back}>
+            <ArrowLeft className="size-6 text-black" strokeWidth={2.2} />
+          </button>
+          <span className="text-[17px] font-bold text-black">Review</span>
+        </header>
+
+        <p className="varo-title pt-6 text-center text-[54px] leading-none text-black">{amount}</p>
+        <p className="pt-2 text-center text-[15px] text-[#6f7075]">to {displayName}</p>
+
+        <div className="px-4 pt-8">
+          {[
+            ["From", "Varo Bank Account • 3046"],
+            ["To", recipient?.detail ?? displayName],
+            ["For", note.trim() || "—"],
+            ["Arrives", "Instantly"],
+            ["Fee", "$0.00"],
+          ].map(([label, value]) => (
+            <div
+              key={label}
+              className="flex items-center justify-between border-b border-border py-4"
+            >
+              <span className="text-[15px] text-[#6f7075]">{label}</span>
+              <span className="max-w-[60%] truncate text-right text-[15px] text-black">
+                {value}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <p className="px-4 pt-5 text-[13px] leading-[1.4] text-[#6f7075]">
+          By sending, you agree this transfer can't be cancelled once it's on its way.
+        </p>
+
+        <div className="mt-auto space-y-3 px-4 pt-8 pb-6">
+          <button
+            type="button"
+            onClick={send}
+            className="h-[52px] w-full rounded-[8px] bg-primary text-[16px] font-bold text-white active:opacity-90"
+          >
+            Send {amount}
+          </button>
+          <button
+            type="button"
+            onClick={() => setStep("amount")}
+            className="h-[52px] w-full rounded-[8px] border border-primary text-[16px] font-bold text-primary"
+          >
+            Edit amount
+          </button>
+        </div>
       </div>
     );
   }
