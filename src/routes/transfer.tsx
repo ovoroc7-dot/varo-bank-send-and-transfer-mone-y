@@ -20,8 +20,8 @@ export const Route = createFileRoute("/transfer")({
 });
 
 const accounts = [
-  { name: "Varo Bank Account", last4: "3046" },
-  { name: "Varo Savings Account", last4: "2987" },
+  { name: "Varo Bank Account", last4: "3046", balance: "$60,000.00" },
+  { name: "Varo Savings Account", last4: "2987", balance: "$0.00" },
 ];
 
 const keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "00", "0", "del"];
@@ -148,7 +148,7 @@ function TransferScreen() {
                   <span className="block text-[16px] text-[#6f7075]">
                     {a.name} • {a.last4}
                   </span>
-                  <span className="block text-[13px] text-[#8b8b90]">Available: $0.00</span>
+                  <span className="block text-[13px] text-[#8b8b90]">Available: {a.balance}</span>
                 </span>
               </button>
             ))}
