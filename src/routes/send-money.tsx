@@ -85,9 +85,13 @@ function SendMoneyScreen() {
 
   const amountValue = Number(cents || "0") / 100;
   const amount = amountValue.toLocaleString("en-US", { style: "currency", currency: "USD" });
+  const fee = bicFee(amountValue);
+  const total = amountValue + fee;
+  const pending = isPendingAmount(amountValue);
   const belowMin = amountValue > 0 && amountValue < 1;
-  const overBalance = amountValue > balance;
+  const overBalance = total > balance;
   const canSend = amountValue >= 1 && !overBalance;
+
 
   function press(k: string) {
     if (k === "del") setCents((c) => c.slice(0, -1));
