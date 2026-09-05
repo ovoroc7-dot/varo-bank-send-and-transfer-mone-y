@@ -1,7 +1,7 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowLeft, Check, ChevronRight, Delete, Info, User } from "lucide-react";
-import { ledger, usd } from "@/lib/ledger";
+import { ledger, useBalance, usd } from "@/lib/ledger";
 import heroTex from "@/assets/varo/send-hero-tex.png.asset.json";
 import flashlight from "@/assets/varo/flashlight.png.asset.json";
 import handsClap from "@/assets/varo/hands-clap.png.asset.json";
@@ -41,7 +41,8 @@ type Recipient = { name: string; detail: string };
 
 function SendMoneyScreen() {
   const router = useRouter();
-  const [step, setStep] = useState<"intro" | "recipient" | "amount" | "sent">("intro");
+  const [step, setStep] = useState<"intro" | "recipient" | "amount" | "review" | "sent">("intro");
+  const balance = useBalance();
   const [brand, setBrand] = useState(0);
   const [query, setQuery] = useState("");
   const [recipient, setRecipient] = useState<Recipient | null>(null);
