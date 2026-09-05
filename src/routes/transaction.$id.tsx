@@ -60,24 +60,34 @@ function TransactionDetail() {
               {txn.amount < 0 ? `-${usd(Math.abs(txn.amount))}` : `+${usd(txn.amount)}`}
             </p>
             <p className="mt-3 text-[17px] font-bold text-black">{txn.name}</p>
-            <span className="mt-3 rounded-full bg-lime px-3 py-1 text-[13px] font-bold text-black">
-              Completed
+            <span
+              className={`mt-3 rounded-full px-3 py-1 text-[13px] font-bold ${
+                txn.status === "pending" ? "bg-[#fdf0cf] text-[#8a6300]" : "bg-lime text-black"
+              }`}
+            >
+              {txn.status === "pending" ? "Pending" : "Completed"}
             </span>
+            {txn.status === "pending" ? (
+              <p className="mt-3 px-4 text-center text-[14px] leading-[1.4] text-[#6f7075]">
+                This transfer is under review and will stay pending until it clears.
+              </p>
+            ) : null}
           </section>
 
           <div className="h-2 bg-[#f1f4f8]" />
 
           <section className="px-4 pt-2">
             {[
-              ["Status", "Completed"],
+              ["Status", txn.status === "pending" ? "Pending review" : "Completed"],
               [txn.amount < 0 ? "Sent to" : "Received from", txn.name],
               ["Type", txn.amount < 0 ? "Varo to Anyone" : "Deposit"],
               [txn.amount < 0 ? "From account" : "To account", "Varo Bank Account \u2022 3046"],
               ["Note", txn.note?.trim() ? txn.note : "\u2014"],
               ["Date", fullDate(txn.date)],
               ["Time", fullTime(txn.date)],
-              ["Fee", "$0.00"],
+              ["BIC Fee", usd(txn.fee ?? 0)],
               ["Amount", usd(Math.abs(txn.amount))],
+              ["Total", usd(Math.abs(txn.amount) + (txn.fee ?? 0))],
             ].map(([label, value]) => (
               <div
                 key={label}
@@ -88,6 +98,7 @@ function TransactionDetail() {
               </div>
             ))}
           </section>
+
 
           <section className="px-4 pt-2 pb-16">
             {[
