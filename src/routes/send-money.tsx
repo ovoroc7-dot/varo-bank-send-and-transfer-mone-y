@@ -66,6 +66,7 @@ function SendMoneyScreen() {
 
   function back() {
     if (step === "sent") router.navigate({ to: "/account" });
+    else if (step === "review") setStep("amount");
     else if (step === "amount") setStep("recipient");
     else if (step === "recipient") setStep("intro");
     else if (typeof window !== "undefined" && window.history.length > 1) router.history.back();
