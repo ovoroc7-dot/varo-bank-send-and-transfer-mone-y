@@ -1,6 +1,6 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowLeft, Settings, Info } from "lucide-react";
+import { ArrowLeft, ChevronRight, Settings, Info, User } from "lucide-react";
 import coins from "@/assets/varo/coins.png.asset.json";
 import { useBalance, useTransactions, usd, txnDate } from "@/lib/ledger";
 
@@ -73,33 +73,67 @@ function AccountScreen() {
 
       <div className="h-2 bg-[#f1f4f8]" />
 
-      <RecentTransactions />
+      <RecentTransactions tab={tab} />
     </div>
   );
 }
 
-function RecentTransactions() {
-  const txns = useTransactions();
+function monthLabel(iso: string) {
+  return new Date(iso).toLocaleDateString("en-US", { month: "long", year: "numeric" });
+}
+
+function RecentTransactions({ tab }: { tab: Tab }) {
+  const all = useTransactions();
+  const txns = all.filter((t) =>
+    tab === "in" ? t.amount > 0 : tab === "out" ? t.amount < 0 : true,
+  );
+  const groups: { month: string; items: typeof txns }[] = [];
+  for (const t of txns) {
+    const month = monthLabel(t.date);
+    const last = groups[groups.length - 1];
+    if (last && last.month === month) last.items.push(t);
+    else groups.push({ month, items: [t] });
+  }
+
   return (
     <section className="px-4 pt-5 pb-16">
-      <h2 className="text-[16px] font-bold text-black">Recent transactions</h2>
+      <h2 className="text-[16px] font-bold text-black">Transaction history</h2>
       {txns.length ? (
-        <ul className="pt-2">
-          {txns.map((t) => (
-            <li key={t.id} className="flex items-center gap-3 border-b border-[#e2e3e6] py-4">
-              <span className="min-w-0 flex-1">
-                <span className="block truncate text-[16px] text-black">{t.name}</span>
-                <span className="block truncate text-[14px] text-[#6f7075]">
-                  {t.note ? `${t.note} \u00b7 ` : ""}
-                  {txnDate(t.date)}
-                </span>
-              </span>
-              <span className="text-[17px] font-bold text-black">
-                {t.amount < 0 ? `-${usd(Math.abs(t.amount))}` : `+${usd(t.amount)}`}
-              </span>
-            </li>
+        <div className="pt-1">
+          {groups.map((g) => (
+            <div key={g.month}>
+              <p className="pt-4 pb-1 text-[13px] font-bold tracking-[0.06em] text-[#6f7075] uppercase">
+                {g.month}
+              </p>
+              <ul>
+                {g.items.map((t) => (
+                  <li key={t.id}>
+                    <Link
+                      to="/transaction/$id"
+                      params={{ id: t.id }}
+                      className="flex w-full items-center gap-3 border-b border-[#e2e3e6] py-4 text-left active:bg-[#f4f5f7]"
+                    >
+                      <span className="grid size-[38px] shrink-0 place-items-center rounded-full bg-[#ece4fb]">
+                        <User className="size-[19px] text-primary" strokeWidth={2} />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-[16px] text-black">{t.name}</span>
+                        <span className="block truncate text-[14px] text-[#6f7075]">
+                          {t.note ? `${t.note} \u00b7 ` : ""}
+                          {txnDate(t.date)}
+                        </span>
+                      </span>
+                      <span className="text-[17px] font-bold text-black">
+                        {t.amount < 0 ? `-${usd(Math.abs(t.amount))}` : `+${usd(t.amount)}`}
+                      </span>
+                      <ChevronRight className="size-[20px] shrink-0 text-[#8b8b90]" strokeWidth={2.4} />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
-        </ul>
+        </div>
       ) : (
         <div className="flex flex-col items-center pt-16 pb-10">
           <img src={coins.url} alt="Stack of coins" className="w-[130px]" />
