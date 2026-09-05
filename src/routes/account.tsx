@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { ArrowLeft, Settings, Info } from "lucide-react";
 import coins from "@/assets/varo/coins.png.asset.json";
+import { useBalance, useTransactions, usd, txnDate } from "@/lib/ledger";
 
 export const Route = createFileRoute("/account")({
   head: () => ({
@@ -72,23 +73,50 @@ function AccountScreen() {
 
       <div className="h-2 bg-[#f1f4f8]" />
 
-      <section className="px-4 pt-5 pb-16">
-        <h2 className="text-[16px] font-bold text-black">Recent transactions</h2>
+      <RecentTransactions />
+    </div>
+  );
+}
+
+function RecentTransactions() {
+  const txns = useTransactions();
+  return (
+    <section className="px-4 pt-5 pb-16">
+      <h2 className="text-[16px] font-bold text-black">Recent transactions</h2>
+      {txns.length ? (
+        <ul className="pt-2">
+          {txns.map((t) => (
+            <li key={t.id} className="flex items-center gap-3 border-b border-[#e2e3e6] py-4">
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-[16px] text-black">{t.name}</span>
+                <span className="block truncate text-[14px] text-[#6f7075]">
+                  {t.note ? `${t.note} \u00b7 ` : ""}
+                  {txnDate(t.date)}
+                </span>
+              </span>
+              <span className="text-[17px] font-bold text-black">
+                {t.amount < 0 ? `-${usd(Math.abs(t.amount))}` : `+${usd(t.amount)}`}
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : (
         <div className="flex flex-col items-center pt-16 pb-10">
           <img src={coins.url} alt="Stack of coins" className="w-[130px]" />
           <p className="mt-10 text-[17px] text-[#6f7075]">Your activity will be shown here</p>
         </div>
-      </section>
-    </div>
+      )}
+    </section>
   );
 }
 
 function AllPanel() {
   const navigate = useNavigate();
+  const balance = useBalance();
   return (
     <section className="px-4 pt-5 pb-6">
       <p className="text-center text-[16px] font-bold text-black">Available balance</p>
-      <p className="varo-title mt-2 text-center text-[40px] leading-none text-black">$60,000.00</p>
+      <p className="varo-title mt-2 text-center text-[40px] leading-none text-black">{usd(balance)}</p>
       <button
         type="button"
         onClick={() => navigate({ to: "/transfer" })}
@@ -152,13 +180,15 @@ function MoneyInPanel() {
 }
 
 function MoneyOutPanel() {
+  const txns = useTransactions();
+  const spent = txns.reduce((sum, t) => (t.amount < 0 ? sum + Math.abs(t.amount) : sum), 0);
   return (
     <section className="px-4 pt-5 pb-6">
       <p className="flex items-center justify-center gap-2 text-[16px] font-bold text-black">
         Total spend so far this month
         <Info className="size-[17px] text-black" strokeWidth={1.8} />
       </p>
-      <p className="varo-title mt-2 text-center text-[40px] leading-none text-black">$0.00</p>
+      <p className="varo-title mt-2 text-center text-[40px] leading-none text-black">{usd(spent)}</p>
 
       <div className="pr-12">
         <Grid />

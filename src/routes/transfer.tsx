@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ArrowLeft, ChevronDown, ChevronRight, CircleDollarSign, Delete, Landmark } from "lucide-react";
 import fdic from "@/assets/varo/fdic.png.asset.json";
 import varoTile from "@/assets/varo/varo-tile.png.asset.json";
+import { useBalance, usd } from "@/lib/ledger";
 
 export const Route = createFileRoute("/transfer")({
   head: () => ({
@@ -19,10 +20,7 @@ export const Route = createFileRoute("/transfer")({
   component: TransferScreen,
 });
 
-const accounts = [
-  { name: "Varo Bank Account", last4: "3046", balance: "$60,000.00" },
-  { name: "Varo Savings Account", last4: "2987", balance: "$0.00" },
-];
+const savingsBalance = "$0.00";
 
 const keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "00", "0", "del"];
 
@@ -32,6 +30,11 @@ function TransferScreen() {
   const [from, setFrom] = useState<string | null>(null);
   const [to, setTo] = useState<string | null>(null);
   const [cents, setCents] = useState("");
+  const bankBalance = useBalance();
+  const accounts = [
+    { name: "Varo Bank Account", last4: "3046", balance: usd(bankBalance) },
+    { name: "Varo Savings Account", last4: "2987", balance: savingsBalance },
+  ];
 
   const amount = (Number(cents || "0") / 100).toLocaleString("en-US", {
     style: "currency",
