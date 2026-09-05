@@ -14,8 +14,13 @@ import { Route as AccountRouteImport } from './routes/account'
 import { Route as AccountNumbersRouteImport } from './routes/account-numbers'
 import { Route as AddCashRouteImport } from './routes/add-cash'
 import { Route as AddDebitCardRouteImport } from './routes/add-debit-card'
+import { Route as ApplePayRouteImport } from './routes/apple-pay'
 import { Route as CashbackRouteImport } from './routes/cashback'
+import { Route as DepositCheckRouteImport } from './routes/deposit-check'
+import { Route as DirectDepositRouteImport } from './routes/direct-deposit'
+import { Route as FindAtmRouteImport } from './routes/find-atm'
 import { Route as FundAppsRouteImport } from './routes/fund-apps'
+import { Route as FundInstantlyRouteImport } from './routes/fund-instantly'
 import { Route as LinkedCardsRouteImport } from './routes/linked-cards'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ManageCardsRouteImport } from './routes/manage-cards'
@@ -30,6 +35,7 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SplashRouteImport } from './routes/splash'
 import { Route as TransferRouteImport } from './routes/transfer'
 import { Route as VaroCardsRouteImport } from './routes/varo-cards'
+import { Route as ZelleRouteImport } from './routes/zelle'
 import { Route as TransactionIdRouteImport } from './routes/transaction.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -57,14 +63,39 @@ const AddDebitCardRoute = AddDebitCardRouteImport.update({
   path: '/add-debit-card',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApplePayRoute = ApplePayRouteImport.update({
+  id: '/apple-pay',
+  path: '/apple-pay',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CashbackRoute = CashbackRouteImport.update({
   id: '/cashback',
   path: '/cashback',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DepositCheckRoute = DepositCheckRouteImport.update({
+  id: '/deposit-check',
+  path: '/deposit-check',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DirectDepositRoute = DirectDepositRouteImport.update({
+  id: '/direct-deposit',
+  path: '/direct-deposit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FindAtmRoute = FindAtmRouteImport.update({
+  id: '/find-atm',
+  path: '/find-atm',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FundAppsRoute = FundAppsRouteImport.update({
   id: '/fund-apps',
   path: '/fund-apps',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FundInstantlyRoute = FundInstantlyRouteImport.update({
+  id: '/fund-instantly',
+  path: '/fund-instantly',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LinkedCardsRoute = LinkedCardsRouteImport.update({
@@ -137,6 +168,11 @@ const VaroCardsRoute = VaroCardsRouteImport.update({
   path: '/varo-cards',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ZelleRoute = ZelleRouteImport.update({
+  id: '/zelle',
+  path: '/zelle',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TransactionIdRoute = TransactionIdRouteImport.update({
   id: '/transaction/$id',
   path: '/transaction/$id',
@@ -149,8 +185,13 @@ export interface FileRoutesByFullPath {
   '/account-numbers': typeof AccountNumbersRoute
   '/add-cash': typeof AddCashRoute
   '/add-debit-card': typeof AddDebitCardRoute
+  '/apple-pay': typeof ApplePayRoute
   '/cashback': typeof CashbackRoute
+  '/deposit-check': typeof DepositCheckRoute
+  '/direct-deposit': typeof DirectDepositRoute
+  '/find-atm': typeof FindAtmRoute
   '/fund-apps': typeof FundAppsRoute
+  '/fund-instantly': typeof FundInstantlyRoute
   '/linked-cards': typeof LinkedCardsRoute
   '/login': typeof LoginRoute
   '/manage-cards': typeof ManageCardsRoute
@@ -165,6 +206,7 @@ export interface FileRoutesByFullPath {
   '/splash': typeof SplashRoute
   '/transfer': typeof TransferRoute
   '/varo-cards': typeof VaroCardsRoute
+  '/zelle': typeof ZelleRoute
   '/transaction/$id': typeof TransactionIdRoute
 }
 export interface FileRoutesByTo {
@@ -173,8 +215,13 @@ export interface FileRoutesByTo {
   '/account-numbers': typeof AccountNumbersRoute
   '/add-cash': typeof AddCashRoute
   '/add-debit-card': typeof AddDebitCardRoute
+  '/apple-pay': typeof ApplePayRoute
   '/cashback': typeof CashbackRoute
+  '/deposit-check': typeof DepositCheckRoute
+  '/direct-deposit': typeof DirectDepositRoute
+  '/find-atm': typeof FindAtmRoute
   '/fund-apps': typeof FundAppsRoute
+  '/fund-instantly': typeof FundInstantlyRoute
   '/linked-cards': typeof LinkedCardsRoute
   '/login': typeof LoginRoute
   '/manage-cards': typeof ManageCardsRoute
@@ -189,6 +236,7 @@ export interface FileRoutesByTo {
   '/splash': typeof SplashRoute
   '/transfer': typeof TransferRoute
   '/varo-cards': typeof VaroCardsRoute
+  '/zelle': typeof ZelleRoute
   '/transaction/$id': typeof TransactionIdRoute
 }
 export interface FileRoutesById {
@@ -198,8 +246,13 @@ export interface FileRoutesById {
   '/account-numbers': typeof AccountNumbersRoute
   '/add-cash': typeof AddCashRoute
   '/add-debit-card': typeof AddDebitCardRoute
+  '/apple-pay': typeof ApplePayRoute
   '/cashback': typeof CashbackRoute
+  '/deposit-check': typeof DepositCheckRoute
+  '/direct-deposit': typeof DirectDepositRoute
+  '/find-atm': typeof FindAtmRoute
   '/fund-apps': typeof FundAppsRoute
+  '/fund-instantly': typeof FundInstantlyRoute
   '/linked-cards': typeof LinkedCardsRoute
   '/login': typeof LoginRoute
   '/manage-cards': typeof ManageCardsRoute
@@ -214,6 +267,7 @@ export interface FileRoutesById {
   '/splash': typeof SplashRoute
   '/transfer': typeof TransferRoute
   '/varo-cards': typeof VaroCardsRoute
+  '/zelle': typeof ZelleRoute
   '/transaction/$id': typeof TransactionIdRoute
 }
 export interface FileRouteTypes {
@@ -224,8 +278,13 @@ export interface FileRouteTypes {
     | '/account-numbers'
     | '/add-cash'
     | '/add-debit-card'
+    | '/apple-pay'
     | '/cashback'
+    | '/deposit-check'
+    | '/direct-deposit'
+    | '/find-atm'
     | '/fund-apps'
+    | '/fund-instantly'
     | '/linked-cards'
     | '/login'
     | '/manage-cards'
@@ -240,6 +299,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/transfer'
     | '/varo-cards'
+    | '/zelle'
     | '/transaction/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -248,8 +308,13 @@ export interface FileRouteTypes {
     | '/account-numbers'
     | '/add-cash'
     | '/add-debit-card'
+    | '/apple-pay'
     | '/cashback'
+    | '/deposit-check'
+    | '/direct-deposit'
+    | '/find-atm'
     | '/fund-apps'
+    | '/fund-instantly'
     | '/linked-cards'
     | '/login'
     | '/manage-cards'
@@ -264,6 +329,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/transfer'
     | '/varo-cards'
+    | '/zelle'
     | '/transaction/$id'
   id:
     | '__root__'
@@ -272,8 +338,13 @@ export interface FileRouteTypes {
     | '/account-numbers'
     | '/add-cash'
     | '/add-debit-card'
+    | '/apple-pay'
     | '/cashback'
+    | '/deposit-check'
+    | '/direct-deposit'
+    | '/find-atm'
     | '/fund-apps'
+    | '/fund-instantly'
     | '/linked-cards'
     | '/login'
     | '/manage-cards'
@@ -288,6 +359,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/transfer'
     | '/varo-cards'
+    | '/zelle'
     | '/transaction/$id'
   fileRoutesById: FileRoutesById
 }
@@ -297,8 +369,13 @@ export interface RootRouteChildren {
   AccountNumbersRoute: typeof AccountNumbersRoute
   AddCashRoute: typeof AddCashRoute
   AddDebitCardRoute: typeof AddDebitCardRoute
+  ApplePayRoute: typeof ApplePayRoute
   CashbackRoute: typeof CashbackRoute
+  DepositCheckRoute: typeof DepositCheckRoute
+  DirectDepositRoute: typeof DirectDepositRoute
+  FindAtmRoute: typeof FindAtmRoute
   FundAppsRoute: typeof FundAppsRoute
+  FundInstantlyRoute: typeof FundInstantlyRoute
   LinkedCardsRoute: typeof LinkedCardsRoute
   LoginRoute: typeof LoginRoute
   ManageCardsRoute: typeof ManageCardsRoute
@@ -313,6 +390,7 @@ export interface RootRouteChildren {
   SplashRoute: typeof SplashRoute
   TransferRoute: typeof TransferRoute
   VaroCardsRoute: typeof VaroCardsRoute
+  ZelleRoute: typeof ZelleRoute
   TransactionIdRoute: typeof TransactionIdRoute
 }
 
@@ -353,6 +431,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AddDebitCardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/apple-pay': {
+      id: '/apple-pay'
+      path: '/apple-pay'
+      fullPath: '/apple-pay'
+      preLoaderRoute: typeof ApplePayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/cashback': {
       id: '/cashback'
       path: '/cashback'
@@ -360,11 +445,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CashbackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/deposit-check': {
+      id: '/deposit-check'
+      path: '/deposit-check'
+      fullPath: '/deposit-check'
+      preLoaderRoute: typeof DepositCheckRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/direct-deposit': {
+      id: '/direct-deposit'
+      path: '/direct-deposit'
+      fullPath: '/direct-deposit'
+      preLoaderRoute: typeof DirectDepositRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/find-atm': {
+      id: '/find-atm'
+      path: '/find-atm'
+      fullPath: '/find-atm'
+      preLoaderRoute: typeof FindAtmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/fund-apps': {
       id: '/fund-apps'
       path: '/fund-apps'
       fullPath: '/fund-apps'
       preLoaderRoute: typeof FundAppsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fund-instantly': {
+      id: '/fund-instantly'
+      path: '/fund-instantly'
+      fullPath: '/fund-instantly'
+      preLoaderRoute: typeof FundInstantlyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/linked-cards': {
@@ -465,6 +578,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VaroCardsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/zelle': {
+      id: '/zelle'
+      path: '/zelle'
+      fullPath: '/zelle'
+      preLoaderRoute: typeof ZelleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/transaction/$id': {
       id: '/transaction/$id'
       path: '/transaction/$id'
@@ -481,8 +601,13 @@ const rootRouteChildren: RootRouteChildren = {
   AccountNumbersRoute: AccountNumbersRoute,
   AddCashRoute: AddCashRoute,
   AddDebitCardRoute: AddDebitCardRoute,
+  ApplePayRoute: ApplePayRoute,
   CashbackRoute: CashbackRoute,
+  DepositCheckRoute: DepositCheckRoute,
+  DirectDepositRoute: DirectDepositRoute,
+  FindAtmRoute: FindAtmRoute,
   FundAppsRoute: FundAppsRoute,
+  FundInstantlyRoute: FundInstantlyRoute,
   LinkedCardsRoute: LinkedCardsRoute,
   LoginRoute: LoginRoute,
   ManageCardsRoute: ManageCardsRoute,
@@ -497,6 +622,7 @@ const rootRouteChildren: RootRouteChildren = {
   SplashRoute: SplashRoute,
   TransferRoute: TransferRoute,
   VaroCardsRoute: VaroCardsRoute,
+  ZelleRoute: ZelleRoute,
   TransactionIdRoute: TransactionIdRoute,
 }
 export const routeTree = rootRouteImport

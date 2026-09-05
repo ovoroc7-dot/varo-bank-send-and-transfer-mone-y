@@ -95,8 +95,24 @@ export const ledger = {
     emit();
     return txn;
   },
-
+  /** Records money coming into the account. Amount is a positive dollar value. */
+  addReceived({ name, note, amount }: { name: string; note?: string; amount: number }) {
+    load();
+    const txn: Txn = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      name,
+      ...(note ? { note } : {}),
+      amount: Math.abs(amount),
+      date: new Date().toISOString(),
+      status: "completed",
+    };
+    txns = [txn, ...txns];
+    persist();
+    emit();
+    return txn;
+  },
 };
+
 
 const emptyTxns: Txn[] = [];
 
