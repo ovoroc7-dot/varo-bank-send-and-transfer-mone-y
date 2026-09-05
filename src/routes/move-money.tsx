@@ -22,12 +22,25 @@ export const Route = createFileRoute("/move-money")({
   component: MoveMoneyScreen,
 });
 
+type MoveTo =
+  | "/transfer"
+  | "/pay-bills"
+  | "/send-money"
+  | "/apple-pay"
+  | "/fund-instantly"
+  | "/zelle"
+  | "/deposit-check"
+  | "/direct-deposit"
+  | "/add-cash"
+  | "/find-atm"
+  | "/account";
+
 const primary: {
   art: ArtKey;
   title: string;
   subtitle: string;
   badge?: string;
-  to?: "/transfer" | "/pay-bills" | "/send-money";
+  to: MoveTo;
 }[] = [
   {
     art: "transfer",
@@ -41,24 +54,37 @@ const primary: {
     subtitle: "Send money to anyone instantly",
     to: "/send-money",
   },
-  { art: "applePay", title: "Apple Pay", subtitle: "Add money instantly", badge: "✦ New" },
+  {
+    art: "applePay",
+    title: "Apple Pay",
+    subtitle: "Add money instantly",
+    badge: "✦ New",
+    to: "/apple-pay",
+  },
   {
     art: "fundInstantly",
     title: "Fund instantly",
     subtitle: "Add money to your account from a debit card",
     badge: "⚡ Instant",
+    to: "/fund-instantly",
   },
   { art: "manageBills", title: "Manage bills", subtitle: "View and pay bills", to: "/pay-bills" },
-  { art: "zelle", title: "Zelle®", subtitle: "Send and receive money fast with Zelle®" },
+  {
+    art: "zelle",
+    title: "Zelle®",
+    subtitle: "Send and receive money fast with Zelle®",
+    to: "/zelle",
+  },
 ];
 
-const more: { art: ArtKey; title: string }[] = [
-  { art: "depositCheck", title: "Deposit check" },
-  { art: "directDeposit", title: "Direct deposit" },
-  { art: "addCash", title: "Add cash" },
-  { art: "findAtm", title: "Find ATM" },
-  { art: "transactionHistory", title: "Transaction history" },
+const more: { art: ArtKey; title: string; to: MoveTo }[] = [
+  { art: "depositCheck", title: "Deposit check", to: "/deposit-check" },
+  { art: "directDeposit", title: "Direct deposit", to: "/direct-deposit" },
+  { art: "addCash", title: "Add cash", to: "/add-cash" },
+  { art: "findAtm", title: "Find ATM", to: "/find-atm" },
+  { art: "transactionHistory", title: "Transaction history", to: "/account" },
 ];
+
 
 function MoveMoneyScreen() {
   return (
