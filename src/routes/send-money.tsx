@@ -1,6 +1,7 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowLeft, ChevronRight, Delete, Info, User } from "lucide-react";
+import { ArrowLeft, Check, ChevronRight, Delete, Info, User } from "lucide-react";
+import { ledger, usd } from "@/lib/ledger";
 import heroTex from "@/assets/varo/send-hero-tex.png.asset.json";
 import flashlight from "@/assets/varo/flashlight.png.asset.json";
 import handsClap from "@/assets/varo/hands-clap.png.asset.json";
@@ -40,7 +41,7 @@ type Recipient = { name: string; detail: string };
 
 function SendMoneyScreen() {
   const router = useRouter();
-  const [step, setStep] = useState<"intro" | "recipient" | "amount">("intro");
+  const [step, setStep] = useState<"intro" | "recipient" | "amount" | "sent">("intro");
   const [brand, setBrand] = useState(0);
   const [query, setQuery] = useState("");
   const [recipient, setRecipient] = useState<Recipient | null>(null);
@@ -54,8 +55,17 @@ function SendMoneyScreen() {
     return () => clearInterval(t);
   }, [step]);
 
+  const displayName = nickname.trim() || recipient?.name || "Recipient";
+
+  function send() {
+    if (amountValue < 1) return;
+    ledger.addSent({ name: displayName, note: note.trim(), amount: amountValue });
+    setStep("sent");
+  }
+
   function back() {
-    if (step === "amount") setStep("recipient");
+    if (step === "sent") router.navigate({ to: "/account" });
+    else if (step === "amount") setStep("recipient");
     else if (step === "recipient") setStep("intro");
     else if (typeof window !== "undefined" && window.history.length > 1) router.history.back();
     else router.navigate({ to: "/", replace: true });
@@ -221,6 +231,45 @@ function SendMoneyScreen() {
     );
   }
 
+  if (step === "sent") {
+    return (
+      <div className="flex min-h-screen flex-col bg-white px-6 pt-16 pb-8">
+        <div className="flex flex-col items-center text-center">
+          <span className="grid size-[72px] place-items-center rounded-full bg-lime">
+            <Check className="size-9 text-primary" strokeWidth={3} />
+          </span>
+          <h1 className="varo-title mt-6 text-[28px] text-black">MONEY SENT</h1>
+          <p className="mt-2 text-[17px] text-black">
+            {amount} to {displayName}
+          </p>
+          {note.trim() ? (
+            <p className="mt-1 text-[15px] text-[#6f7075]">For {note.trim()}</p>
+          ) : null}
+          <p className="mt-6 text-[15px] text-[#6f7075]">
+            New available balance {usd(ledger.getBalance())}
+          </p>
+        </div>
+
+        <div className="mt-auto space-y-3">
+          <button
+            type="button"
+            onClick={() => router.navigate({ to: "/account" })}
+            className="h-[52px] w-full rounded-[8px] bg-primary text-[16px] font-bold text-white"
+          >
+            View activity
+          </button>
+          <button
+            type="button"
+            onClick={() => router.navigate({ to: "/" })}
+            className="h-[52px] w-full rounded-[8px] border border-primary text-[16px] font-bold text-primary"
+          >
+            Done
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-white">
       <header className="flex items-center gap-4 px-4 pt-5 pb-4">
@@ -273,10 +322,15 @@ function SendMoneyScreen() {
       <div className="px-4 pt-3">
         <button
           type="button"
-          disabled
-          className="h-[46px] w-full rounded-[6px] bg-[#e3e6ea] text-[15px] text-[#9a9ba0]"
+          onClick={send}
+          disabled={amountValue < 1}
+          className={`h-[46px] w-full rounded-[6px] text-[15px] font-bold ${
+            amountValue < 1
+              ? "bg-[#e3e6ea] text-[#9a9ba0]"
+              : "bg-primary text-white active:opacity-90"
+          }`}
         >
-          Next
+          Send {amountValue >= 1 ? amount : ""}
         </button>
       </div>
 
