@@ -85,6 +85,8 @@ function SendMoneyScreen() {
   const amountValue = Number(cents || "0") / 100;
   const amount = amountValue.toLocaleString("en-US", { style: "currency", currency: "USD" });
   const belowMin = amountValue > 0 && amountValue < 1;
+  const overBalance = amountValue > balance;
+  const canSend = amountValue >= 1 && !overBalance;
 
   function press(k: string) {
     if (k === "del") setCents((c) => c.slice(0, -1));
@@ -314,25 +316,27 @@ function SendMoneyScreen() {
 
       <p
         className={`flex items-center justify-center gap-1 pt-6 text-[12px] ${
-          belowMin ? "text-[#d0342c]" : "text-black"
+          belowMin || overBalance ? "text-[#d0342c]" : "text-black"
         }`}
       >
-        {belowMin ? "Minimum transfer amount is $1.00" : "Your limit for this transfer is $0.00"}
+        {belowMin
+          ? "Minimum transfer amount is $1.00"
+          : overBalance
+            ? "Amount exceeds your available balance"
+            : `Your limit for this transfer is ${usd(balance)}`}
         <Info className="size-[13px]" strokeWidth={2} />
       </p>
 
       <div className="px-4 pt-3">
         <button
           type="button"
-          onClick={send}
-          disabled={amountValue < 1}
+          onClick={() => setStep("review")}
+          disabled={!canSend}
           className={`h-[46px] w-full rounded-[6px] text-[15px] font-bold ${
-            amountValue < 1
-              ? "bg-[#e3e6ea] text-[#9a9ba0]"
-              : "bg-primary text-white active:opacity-90"
+            !canSend ? "bg-[#e3e6ea] text-[#9a9ba0]" : "bg-primary text-white active:opacity-90"
           }`}
         >
-          Send {amountValue >= 1 ? amount : ""}
+          Send {canSend ? amount : ""}
         </button>
       </div>
 
