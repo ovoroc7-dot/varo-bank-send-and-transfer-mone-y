@@ -189,7 +189,7 @@ function HomeScreen() {
         <Link to="/account" className="flex items-center gap-3 bg-card px-4 py-4">
           <Art name="bankAccount" size={42} />
           <span className="flex-1 text-[16px] text-black">Varo Bank Account</span>
-          <span className="text-[19px] font-bold text-black">$0.00</span>
+          <span className="text-[19px] font-bold text-black">$60,000.00</span>
         </Link>
 
         <div className="bg-[#d6d9dd]">
