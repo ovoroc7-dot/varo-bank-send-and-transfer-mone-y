@@ -305,20 +305,42 @@ function SendMoneyScreen() {
     return (
       <div className="flex min-h-screen flex-col bg-white px-6 pt-16 pb-8">
         <div className="flex flex-col items-center text-center">
-          <span className="grid size-[72px] place-items-center rounded-full bg-lime">
-            <Check className="size-9 text-primary" strokeWidth={3} />
+          <span
+            className={`grid size-[72px] place-items-center rounded-full ${pending ? "bg-[#fdf0cf]" : "bg-lime"}`}
+          >
+            {pending ? (
+              <Clock className="size-9 text-[#8a6300]" strokeWidth={2.6} />
+            ) : (
+              <Check className="size-9 text-primary" strokeWidth={3} />
+            )}
           </span>
-          <h1 className="varo-title mt-6 text-[28px] text-black">MONEY SENT</h1>
+          <h1 className="varo-title mt-6 text-[28px] text-black">
+            {pending ? "PAYMENT PENDING" : "MONEY SENT"}
+          </h1>
           <p className="mt-2 text-[17px] text-black">
             {amount} to {displayName}
           </p>
           {note.trim() ? (
             <p className="mt-1 text-[15px] text-[#6f7075]">For {note.trim()}</p>
           ) : null}
+          {pending ? (
+            <>
+              <span className="mt-4 rounded-full bg-[#fdf0cf] px-3 py-1 text-[13px] font-bold text-[#8a6300]">
+                Pending review
+              </span>
+              <p className="mt-4 px-2 text-[15px] leading-[1.4] text-[#6f7075]">
+                We're reviewing this transfer. It stays pending until the review is complete.
+              </p>
+            </>
+          ) : null}
+          {fee ? (
+            <p className="mt-3 text-[15px] text-[#6f7075]">BIC fee {usd(fee)} · total {usd(total)}</p>
+          ) : null}
           <p className="mt-6 text-[15px] text-[#6f7075]">
             New available balance {usd(ledger.getBalance())}
           </p>
         </div>
+
 
         <div className="mt-auto space-y-3">
           <button
