@@ -1,7 +1,7 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowLeft, Check, ChevronRight, Delete, Info, User } from "lucide-react";
-import { ledger, usd } from "@/lib/ledger";
+import { ledger, useBalance, usd } from "@/lib/ledger";
 import heroTex from "@/assets/varo/send-hero-tex.png.asset.json";
 import flashlight from "@/assets/varo/flashlight.png.asset.json";
 import handsClap from "@/assets/varo/hands-clap.png.asset.json";
@@ -41,7 +41,8 @@ type Recipient = { name: string; detail: string };
 
 function SendMoneyScreen() {
   const router = useRouter();
-  const [step, setStep] = useState<"intro" | "recipient" | "amount" | "sent">("intro");
+  const [step, setStep] = useState<"intro" | "recipient" | "amount" | "review" | "sent">("intro");
+  const balance = useBalance();
   const [brand, setBrand] = useState(0);
   const [query, setQuery] = useState("");
   const [recipient, setRecipient] = useState<Recipient | null>(null);
@@ -58,13 +59,14 @@ function SendMoneyScreen() {
   const displayName = nickname.trim() || recipient?.name || "Recipient";
 
   function send() {
-    if (amountValue < 1) return;
+    if (!canSend) return;
     ledger.addSent({ name: displayName, note: note.trim(), amount: amountValue });
     setStep("sent");
   }
 
   function back() {
     if (step === "sent") router.navigate({ to: "/account" });
+    else if (step === "review") setStep("amount");
     else if (step === "amount") setStep("recipient");
     else if (step === "recipient") setStep("intro");
     else if (typeof window !== "undefined" && window.history.length > 1) router.history.back();
@@ -83,6 +85,8 @@ function SendMoneyScreen() {
   const amountValue = Number(cents || "0") / 100;
   const amount = amountValue.toLocaleString("en-US", { style: "currency", currency: "USD" });
   const belowMin = amountValue > 0 && amountValue < 1;
+  const overBalance = amountValue > balance;
+  const canSend = amountValue >= 1 && !overBalance;
 
   function press(k: string) {
     if (k === "del") setCents((c) => c.slice(0, -1));
@@ -231,6 +235,63 @@ function SendMoneyScreen() {
     );
   }
 
+  if (step === "review") {
+    return (
+      <div className="flex min-h-screen flex-col bg-white">
+        <header className="flex items-center gap-4 px-4 pt-5 pb-4">
+          <button type="button" aria-label="Back" onClick={back}>
+            <ArrowLeft className="size-6 text-black" strokeWidth={2.2} />
+          </button>
+          <span className="text-[17px] font-bold text-black">Review</span>
+        </header>
+
+        <p className="varo-title pt-6 text-center text-[54px] leading-none text-black">{amount}</p>
+        <p className="pt-2 text-center text-[15px] text-[#6f7075]">to {displayName}</p>
+
+        <div className="px-4 pt-8">
+          {[
+            ["From", "Varo Bank Account • 3046"],
+            ["To", recipient?.detail ?? displayName],
+            ["For", note.trim() || "—"],
+            ["Arrives", "Instantly"],
+            ["Fee", "$0.00"],
+          ].map(([label, value]) => (
+            <div
+              key={label}
+              className="flex items-center justify-between border-b border-border py-4"
+            >
+              <span className="text-[15px] text-[#6f7075]">{label}</span>
+              <span className="max-w-[60%] truncate text-right text-[15px] text-black">
+                {value}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <p className="px-4 pt-5 text-[13px] leading-[1.4] text-[#6f7075]">
+          By sending, you agree this transfer can't be cancelled once it's on its way.
+        </p>
+
+        <div className="mt-auto space-y-3 px-4 pt-8 pb-6">
+          <button
+            type="button"
+            onClick={send}
+            className="h-[52px] w-full rounded-[8px] bg-primary text-[16px] font-bold text-white active:opacity-90"
+          >
+            Send {amount}
+          </button>
+          <button
+            type="button"
+            onClick={() => setStep("amount")}
+            className="h-[52px] w-full rounded-[8px] border border-primary text-[16px] font-bold text-primary"
+          >
+            Edit amount
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (step === "sent") {
     return (
       <div className="flex min-h-screen flex-col bg-white px-6 pt-16 pb-8">
@@ -312,25 +373,27 @@ function SendMoneyScreen() {
 
       <p
         className={`flex items-center justify-center gap-1 pt-6 text-[12px] ${
-          belowMin ? "text-[#d0342c]" : "text-black"
+          belowMin || overBalance ? "text-[#d0342c]" : "text-black"
         }`}
       >
-        {belowMin ? "Minimum transfer amount is $1.00" : "Your limit for this transfer is $0.00"}
+        {belowMin
+          ? "Minimum transfer amount is $1.00"
+          : overBalance
+            ? "Amount exceeds your available balance"
+            : `Your limit for this transfer is ${usd(balance)}`}
         <Info className="size-[13px]" strokeWidth={2} />
       </p>
 
       <div className="px-4 pt-3">
         <button
           type="button"
-          onClick={send}
-          disabled={amountValue < 1}
+          onClick={() => setStep("review")}
+          disabled={!canSend}
           className={`h-[46px] w-full rounded-[6px] text-[15px] font-bold ${
-            amountValue < 1
-              ? "bg-[#e3e6ea] text-[#9a9ba0]"
-              : "bg-primary text-white active:opacity-90"
+            !canSend ? "bg-[#e3e6ea] text-[#9a9ba0]" : "bg-primary text-white active:opacity-90"
           }`}
         >
-          Send {amountValue >= 1 ? amount : ""}
+          Send {canSend ? amount : ""}
         </button>
       </div>
 
