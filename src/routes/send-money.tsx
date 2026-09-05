@@ -258,8 +258,9 @@ function SendMoneyScreen() {
             ["From", "Varo Bank Account • 3046"],
             ["To", recipient?.detail ?? displayName],
             ["For", note.trim() || "—"],
-            ["Arrives", "Instantly"],
-            ["Fee", "$0.00"],
+            ["Arrives", pending ? "After review" : "Instantly"],
+            ["BIC Fee", usd(fee)],
+            ["Total", usd(total)],
           ].map(([label, value]) => (
             <div
               key={label}
@@ -274,8 +275,11 @@ function SendMoneyScreen() {
         </div>
 
         <p className="px-4 pt-5 text-[13px] leading-[1.4] text-[#6f7075]">
-          By sending, you agree this transfer can't be cancelled once it's on its way.
+          {pending
+            ? `Transfers of $1,000.00 and above are held as pending while we review them. A BIC fee of ${usd(fee)} applies to this transfer.`
+            : "By sending, you agree this transfer can't be cancelled once it's on its way."}
         </p>
+
 
         <div className="mt-auto space-y-3 px-4 pt-8 pb-6">
           <button
