@@ -1,10 +1,11 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowLeft, Check, ChevronRight, Delete, Info, User } from "lucide-react";
-import { ledger, useBalance, usd } from "@/lib/ledger";
+import { ArrowLeft, Check, ChevronRight, Clock, Delete, Info, User } from "lucide-react";
+import { bicFee, isPendingAmount, ledger, useBalance, usd } from "@/lib/ledger";
 import heroTex from "@/assets/varo/send-hero-tex.png.asset.json";
 import flashlight from "@/assets/varo/flashlight.png.asset.json";
 import handsClap from "@/assets/varo/hands-clap.png.asset.json";
+
 
 export const Route = createFileRoute("/send-money")({
   head: () => ({
