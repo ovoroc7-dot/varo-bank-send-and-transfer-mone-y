@@ -106,19 +106,13 @@ function MoveMoneyScreen() {
               <Chevron />
             </>
           );
-          const cls = "flex w-full items-center gap-4 px-4 py-5 text-left";
+          const cls = "flex w-full items-center gap-4 px-4 py-5 text-left active:bg-[#f4f5f7]";
           return (
             <div key={item.title}>
               {i > 0 ? <Divider /> : null}
-              {item.to ? (
-                <Link to={item.to} className={cls}>
-                  {inner}
-                </Link>
-              ) : (
-                <button type="button" className={cls}>
-                  {inner}
-                </button>
-              )}
+              <Link to={item.to} className={cls}>
+                {inner}
+              </Link>
             </div>
           );
         })}
@@ -131,13 +125,17 @@ function MoveMoneyScreen() {
         {more.map((item, i) => (
           <div key={item.title}>
             {i > 0 ? <Divider /> : null}
-            <button type="button" className="flex w-full items-center gap-4 px-4 py-6 text-left">
+            <Link
+              to={item.to}
+              className="flex w-full items-center gap-4 px-4 py-6 text-left active:bg-[#f4f5f7]"
+            >
               <Art name={item.art} size={54} />
               <span className="flex-1 text-[17px] text-black">{item.title}</span>
               <Chevron />
-            </button>
+            </Link>
           </div>
         ))}
+
       </div>
     </div>
   );
