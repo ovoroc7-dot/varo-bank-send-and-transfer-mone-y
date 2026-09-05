@@ -74,23 +74,28 @@ export const ledger = {
   },
   getBalance(): number {
     load();
-    return txns.reduce((sum, t) => sum + t.amount, STARTING_BALANCE);
+    return txns.reduce((sum, t) => sum + t.amount - (t.fee ?? 0), STARTING_BALANCE);
   },
   /** Records money leaving the account. Amount is a positive dollar value. */
   addSent({ name, note, amount }: { name: string; note?: string; amount: number }) {
     load();
+    const value = Math.abs(amount);
+    const fee = bicFee(value);
     const txn: Txn = {
       id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       name,
       ...(note ? { note } : {}),
-      amount: -Math.abs(amount),
+      amount: -value,
       date: new Date().toISOString(),
+      status: isPendingAmount(value) ? "pending" : "completed",
+      ...(fee ? { fee } : {}),
     };
     txns = [txn, ...txns];
     persist();
     emit();
     return txn;
   },
+
 };
 
 const emptyTxns: Txn[] = [];
