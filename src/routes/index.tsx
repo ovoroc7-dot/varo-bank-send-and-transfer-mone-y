@@ -120,6 +120,7 @@ const quickActions = [
 
 function HomeScreen() {
   const [promo, setPromo] = useState(true);
+  const [topUpOpen, setTopUpOpen] = useState(true);
   const balance = useBalance();
 
   return (
