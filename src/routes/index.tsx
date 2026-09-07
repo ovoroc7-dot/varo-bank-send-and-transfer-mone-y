@@ -128,19 +128,15 @@ function HomeScreen() {
       <VaroHeader />
 
       <div className="no-scrollbar flex gap-3 overflow-x-auto px-4 pt-2 pb-4">
-        {quickActions.map((a) => {
-          const cls =
-            "shrink-0 rounded-[9px] bg-primary px-5 py-3 text-[15px] font-bold text-white";
-          return a.to ? (
-            <Link key={a.label} to={a.to} className={cls}>
-              {a.label}
-            </Link>
-          ) : (
-            <button key={a.label} type="button" className={cls}>
-              {a.label}
-            </button>
-          );
-        })}
+        {quickActions.map((a) => (
+          <Link
+            key={a.label}
+            to={a.to}
+            className="shrink-0 rounded-[9px] bg-primary px-5 py-3 text-[15px] font-bold text-white"
+          >
+            {a.label}
+          </Link>
+        ))}
       </div>
 
       <div className="space-y-4 px-4">
