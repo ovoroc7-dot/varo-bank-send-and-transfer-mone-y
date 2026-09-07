@@ -103,7 +103,7 @@ async function refreshFromCloud() {
     ...(r.note ? { note: r.note } : {}),
     amount: Number(r.amount),
     date: r.created_at,
-    status: (r.status === "pending" ? "pending" : "completed") as Txn["status"],
+    status: r.status === "pending" ? ("pending" as const) : ("completed" as const),
     ...(Number(r.fee) ? { fee: Number(r.fee) } : {}),
   }));
 

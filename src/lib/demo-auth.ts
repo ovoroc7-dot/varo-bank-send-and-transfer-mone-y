@@ -37,7 +37,7 @@ export const demoAuth = {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: phone ? { data: { phone } } : undefined,
+      ...(phone ? { options: { data: { phone } } } : {}),
     });
     return {
       error: error ? error.message : null,
