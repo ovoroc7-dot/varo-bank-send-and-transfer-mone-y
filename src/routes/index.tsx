@@ -113,9 +113,9 @@ function SplashScreen() {
 const quickActions = [
   { label: "Transfer", to: "/transfer" },
   { label: "Pay bills", to: "/pay-bills" },
-  { label: "View card", to: null },
+  { label: "View card", to: "/varo-cards" },
   { label: "Send money", to: "/send-money" },
-  { label: "Find ATM", to: null },
+  { label: "Find ATM", to: "/find-atm" },
 ] as const;
 
 function HomeScreen() {
