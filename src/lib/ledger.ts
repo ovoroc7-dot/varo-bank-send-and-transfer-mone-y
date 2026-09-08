@@ -1,6 +1,8 @@
 import { useSyncExternalStore } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
+export type VaroAccount = "checking" | "savings";
+
 export type Txn = {
   id: string;
   name: string;
@@ -9,6 +11,7 @@ export type Txn = {
   date: string; // ISO
   status?: "pending" | "completed";
   fee?: number; // BIC fee charged on top of the amount
+  account?: VaroAccount; // which Varo account the money moved through
 };
 
 const STARTING_BALANCE = 60000;
@@ -105,6 +108,7 @@ async function refreshFromCloud() {
     date: r.created_at,
     status: r.status === "pending" ? ("pending" as const) : ("completed" as const),
     ...(Number(r.fee) ? { fee: Number(r.fee) } : {}),
+    account: r.account === "savings" ? ("savings" as const) : ("checking" as const),
   }));
 
   const remoteIds = new Set(remote.map((t) => t.id));
@@ -119,6 +123,7 @@ async function refreshFromCloud() {
         amount: t.amount,
         fee: t.fee ?? 0,
         status: t.status ?? "completed",
+        account: t.account ?? "checking",
         created_at: t.date,
       })),
     );
@@ -142,6 +147,7 @@ function pushToCloud(txn: Txn) {
     amount: txn.amount,
     fee: txn.fee ?? 0,
     status: txn.status ?? "completed",
+    account: txn.account ?? "checking",
     created_at: txn.date,
   });
 }
@@ -171,6 +177,18 @@ if (typeof window !== "undefined") {
   });
 }
 
+function record(txn: Txn) {
+  txns = [txn, ...txns];
+  persist();
+  emit();
+  pushToCloud(txn);
+  return txn;
+}
+
+function accountOf(t: Txn): VaroAccount {
+  return t.account ?? "checking";
+}
+
 export const ledger = {
   subscribe(listener: () => void) {
     listeners.add(listener);
@@ -179,14 +197,23 @@ export const ledger = {
   getTransactions(): Txn[] {
     return txns;
   },
+  /** Checking (Varo Bank Account) balance. */
   getBalance(): number {
-    return txns.reduce((sum, t) => sum + t.amount - (t.fee ?? 0), STARTING_BALANCE);
+    return txns
+      .filter((t) => accountOf(t) === "checking")
+      .reduce((sum, t) => sum + t.amount - (t.fee ?? 0), STARTING_BALANCE);
   },
-  /** Records money leaving the account. Amount is a positive dollar value. */
+  /** Varo Savings Account balance. */
+  getSavingsBalance(): number {
+    return txns
+      .filter((t) => accountOf(t) === "savings")
+      .reduce((sum, t) => sum + t.amount - (t.fee ?? 0), 0);
+  },
+  /** Records money leaving the Varo Bank Account. Amount is a positive dollar value. */
   addSent({ name, note, amount }: { name: string; note?: string; amount: number }) {
     const value = Math.abs(amount);
     const fee = bicFee(value);
-    const txn: Txn = {
+    return record({
       id: crypto.randomUUID(),
       name,
       ...(note ? { note } : {}),
@@ -194,28 +221,55 @@ export const ledger = {
       date: new Date().toISOString(),
       status: isPendingAmount(value) ? "pending" : "completed",
       ...(fee ? { fee } : {}),
-    };
-    txns = [txn, ...txns];
-    persist();
-    emit();
-    pushToCloud(txn);
-    return txn;
+      account: "checking",
+    });
   },
-  /** Records money coming into the account. Amount is a positive dollar value. */
+  /** Records money coming into the Varo Bank Account. Amount is a positive dollar value. */
   addReceived({ name, note, amount }: { name: string; note?: string; amount: number }) {
-    const txn: Txn = {
+    return record({
       id: crypto.randomUUID(),
       name,
       ...(note ? { note } : {}),
       amount: Math.abs(amount),
       date: new Date().toISOString(),
       status: "completed",
-    };
-    txns = [txn, ...txns];
-    persist();
-    emit();
-    pushToCloud(txn);
-    return txn;
+      account: "checking",
+    });
+  },
+  /**
+   * Moves money between the user's own Varo accounts. Records one entry on each
+   * side so both balances and the transaction history stay accurate.
+   */
+  transferBetweenAccounts({
+    from,
+    to,
+    amount,
+  }: {
+    from: VaroAccount;
+    to: VaroAccount;
+    amount: number;
+  }) {
+    const value = Math.abs(amount);
+    const label = (a: VaroAccount) =>
+      a === "checking" ? "Varo Bank Account" : "Varo Savings Account";
+    const date = new Date().toISOString();
+    const out = record({
+      id: crypto.randomUUID(),
+      name: `Transfer to ${label(to)}`,
+      amount: -value,
+      date,
+      status: "completed",
+      account: from,
+    });
+    record({
+      id: crypto.randomUUID(),
+      name: `Transfer from ${label(from)}`,
+      amount: value,
+      date,
+      status: "completed",
+      account: to,
+    });
+    return out;
   },
 };
 
@@ -231,6 +285,10 @@ export function useTransactions(): Txn[] {
 
 export function useBalance(): number {
   return useSyncExternalStore(ledger.subscribe, ledger.getBalance, () => STARTING_BALANCE);
+}
+
+export function useSavingsBalance(): number {
+  return useSyncExternalStore(ledger.subscribe, ledger.getSavingsBalance, () => 0);
 }
 
 export function usd(n: number) {

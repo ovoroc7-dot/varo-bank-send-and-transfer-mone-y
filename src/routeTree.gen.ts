@@ -14,6 +14,7 @@ import { Route as AccountRouteImport } from './routes/account'
 import { Route as AccountNumbersRouteImport } from './routes/account-numbers'
 import { Route as AddCashRouteImport } from './routes/add-cash'
 import { Route as AddDebitCardRouteImport } from './routes/add-debit-card'
+import { Route as AddMoneyRouteImport } from './routes/add-money'
 import { Route as ApplePayRouteImport } from './routes/apple-pay'
 import { Route as CashbackRouteImport } from './routes/cashback'
 import { Route as DepositCheckRouteImport } from './routes/deposit-check'
@@ -61,6 +62,11 @@ const AddCashRoute = AddCashRouteImport.update({
 const AddDebitCardRoute = AddDebitCardRouteImport.update({
   id: '/add-debit-card',
   path: '/add-debit-card',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AddMoneyRoute = AddMoneyRouteImport.update({
+  id: '/add-money',
+  path: '/add-money',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApplePayRoute = ApplePayRouteImport.update({
@@ -185,6 +191,7 @@ export interface FileRoutesByFullPath {
   '/account-numbers': typeof AccountNumbersRoute
   '/add-cash': typeof AddCashRoute
   '/add-debit-card': typeof AddDebitCardRoute
+  '/add-money': typeof AddMoneyRoute
   '/apple-pay': typeof ApplePayRoute
   '/cashback': typeof CashbackRoute
   '/deposit-check': typeof DepositCheckRoute
@@ -215,6 +222,7 @@ export interface FileRoutesByTo {
   '/account-numbers': typeof AccountNumbersRoute
   '/add-cash': typeof AddCashRoute
   '/add-debit-card': typeof AddDebitCardRoute
+  '/add-money': typeof AddMoneyRoute
   '/apple-pay': typeof ApplePayRoute
   '/cashback': typeof CashbackRoute
   '/deposit-check': typeof DepositCheckRoute
@@ -246,6 +254,7 @@ export interface FileRoutesById {
   '/account-numbers': typeof AccountNumbersRoute
   '/add-cash': typeof AddCashRoute
   '/add-debit-card': typeof AddDebitCardRoute
+  '/add-money': typeof AddMoneyRoute
   '/apple-pay': typeof ApplePayRoute
   '/cashback': typeof CashbackRoute
   '/deposit-check': typeof DepositCheckRoute
@@ -278,6 +287,7 @@ export interface FileRouteTypes {
     | '/account-numbers'
     | '/add-cash'
     | '/add-debit-card'
+    | '/add-money'
     | '/apple-pay'
     | '/cashback'
     | '/deposit-check'
@@ -308,6 +318,7 @@ export interface FileRouteTypes {
     | '/account-numbers'
     | '/add-cash'
     | '/add-debit-card'
+    | '/add-money'
     | '/apple-pay'
     | '/cashback'
     | '/deposit-check'
@@ -338,6 +349,7 @@ export interface FileRouteTypes {
     | '/account-numbers'
     | '/add-cash'
     | '/add-debit-card'
+    | '/add-money'
     | '/apple-pay'
     | '/cashback'
     | '/deposit-check'
@@ -369,6 +381,7 @@ export interface RootRouteChildren {
   AccountNumbersRoute: typeof AccountNumbersRoute
   AddCashRoute: typeof AddCashRoute
   AddDebitCardRoute: typeof AddDebitCardRoute
+  AddMoneyRoute: typeof AddMoneyRoute
   ApplePayRoute: typeof ApplePayRoute
   CashbackRoute: typeof CashbackRoute
   DepositCheckRoute: typeof DepositCheckRoute
@@ -429,6 +442,13 @@ declare module '@tanstack/react-router' {
       path: '/add-debit-card'
       fullPath: '/add-debit-card'
       preLoaderRoute: typeof AddDebitCardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/add-money': {
+      id: '/add-money'
+      path: '/add-money'
+      fullPath: '/add-money'
+      preLoaderRoute: typeof AddMoneyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/apple-pay': {
@@ -601,6 +621,7 @@ const rootRouteChildren: RootRouteChildren = {
   AccountNumbersRoute: AccountNumbersRoute,
   AddCashRoute: AddCashRoute,
   AddDebitCardRoute: AddDebitCardRoute,
+  AddMoneyRoute: AddMoneyRoute,
   ApplePayRoute: ApplePayRoute,
   CashbackRoute: CashbackRoute,
   DepositCheckRoute: DepositCheckRoute,
