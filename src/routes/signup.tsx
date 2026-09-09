@@ -29,11 +29,12 @@ function SignupScreen() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [pin, setPin] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [confirmSent, setConfirmSent] = useState(false);
-  const ready = email.trim() !== "" && password.length >= 6;
+  const ready = email.trim() !== "" && password.length >= 6 && pin.length === 4;
 
   if (confirmSent) {
     return (
