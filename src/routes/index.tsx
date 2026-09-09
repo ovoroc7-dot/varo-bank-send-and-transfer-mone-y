@@ -112,6 +112,7 @@ function SplashScreen() {
 
 const quickActions = [
   { label: "Transfer", to: "/transfer" },
+  { label: "Add money", to: "/add-money" },
   { label: "Pay bills", to: "/pay-bills" },
   { label: "View card", to: "/varo-cards" },
   { label: "Send money", to: "/send-money" },
