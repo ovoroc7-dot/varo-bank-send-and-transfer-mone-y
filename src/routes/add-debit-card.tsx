@@ -52,14 +52,32 @@ function AddDebitCardScreen() {
           className="mt-2 w-full rounded-[8px] border border-border px-4 py-4 text-[16px] text-black"
         />
 
+        <label className="mt-5 block text-[13px] font-bold text-black" htmlFor="issuer">
+          Bank or card name
+        </label>
+        <input
+          id="issuer"
+          value={issuer}
+          onChange={(e) => setIssuer(e.target.value)}
+          placeholder="Bank or card name"
+          className="mt-2 w-full rounded-[8px] border border-border px-4 py-4 text-[16px] text-black placeholder:text-[#8b8b90]"
+        />
+
         <label className="mt-5 block text-[13px] font-bold text-black" htmlFor="number">
           Debit card number
         </label>
         <input
           id="number"
+          inputMode="numeric"
+          value={number}
+          onChange={(e) => {
+            setNumber(e.target.value.replace(/\D/g, "").slice(0, 19));
+            setError("");
+          }}
           placeholder="Debit card number"
           className="mt-2 w-full rounded-[8px] border border-border px-4 py-4 text-[16px] text-black placeholder:text-[#8b8b90]"
         />
+
 
         <div className="mt-5 flex gap-4">
           <div className="flex-1">
