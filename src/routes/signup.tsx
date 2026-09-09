@@ -145,6 +145,25 @@ function SignupScreen() {
         </div>
         <p className="mt-1 text-[12px] text-[#6e6e73]">At least 6 characters.</p>
 
+        <label htmlFor="pin" className="mt-5 block text-[14px] font-bold text-black">
+          Account verification PIN
+        </label>
+        <input
+          id="pin"
+          inputMode="numeric"
+          autoComplete="one-time-code"
+          value={pin}
+          onChange={(e) => {
+            setPin(e.target.value.replace(/\D/g, "").slice(0, 4));
+            setError(null);
+          }}
+          placeholder="4-digit PIN"
+          className="mt-2 h-[52px] w-full rounded-[6px] border border-[#8e8e93] px-3 text-[16px] tracking-[0.3em] text-black outline-none placeholder:tracking-normal"
+        />
+        <p className="mt-1 text-[12px] text-[#6e6e73]">
+          Enter the verification PIN you were given to open a Varo account.
+        </p>
+
         {error ? (
           <p className="mt-3 text-[14px] text-[#c0392b]">{error}</p>
         ) : null}
