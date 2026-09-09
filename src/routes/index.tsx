@@ -220,7 +220,7 @@ function HomeScreen() {
               <div className="mx-4 h-px bg-black/10" />
               <TopUpRow art="depositCash" title="Deposit Cash" badge="instant" to="/add-cash" />
               <div className="mx-4 h-px bg-black/10" />
-              <TopUpRow art="bankTransfer" title="Bank Transfer" badge="days" to="/transfer" />
+              <TopUpRow art="bankTransfer" title="Bank Transfer" badge="days" to="/add-money" />
             </div>
           ) : null}
         </div>
@@ -238,7 +238,7 @@ function HomeScreen() {
             1.00% APY
           </span>
         </span>
-        <span className="text-[19px] font-bold text-black">$0.00</span>
+        <span className="text-[19px] font-bold text-black">{usd(savings)}</span>
       </Link>
 
       <div className="mx-4 mt-3 flex items-center gap-3 rounded-[8px] bg-card px-4 py-4">
