@@ -7,7 +7,7 @@ import { Art } from "@/components/varo/icon";
 import { useDemoAuth } from "@/lib/demo-auth";
 import { isIOS, isMobile, isStandalone, promptInstall } from "@/lib/install";
 import fdic from "@/assets/varo/fdic.png.asset.json";
-import { useBalance, usd } from "@/lib/ledger";
+import { useBalance, useSavingsBalance, usd } from "@/lib/ledger";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -112,6 +112,7 @@ function SplashScreen() {
 
 const quickActions = [
   { label: "Transfer", to: "/transfer" },
+  { label: "Add money", to: "/add-money" },
   { label: "Pay bills", to: "/pay-bills" },
   { label: "View card", to: "/varo-cards" },
   { label: "Send money", to: "/send-money" },
@@ -122,6 +123,7 @@ function HomeScreen() {
   const [promo, setPromo] = useState(true);
   const [topUpOpen, setTopUpOpen] = useState(true);
   const balance = useBalance();
+  const savings = useSavingsBalance();
 
   return (
     <div className="pb-6">
@@ -218,7 +220,7 @@ function HomeScreen() {
               <div className="mx-4 h-px bg-black/10" />
               <TopUpRow art="depositCash" title="Deposit Cash" badge="instant" to="/add-cash" />
               <div className="mx-4 h-px bg-black/10" />
-              <TopUpRow art="bankTransfer" title="Bank Transfer" badge="days" to="/transfer" />
+              <TopUpRow art="bankTransfer" title="Bank Transfer" badge="days" to="/add-money" />
             </div>
           ) : null}
         </div>
@@ -236,7 +238,7 @@ function HomeScreen() {
             1.00% APY
           </span>
         </span>
-        <span className="text-[19px] font-bold text-black">$0.00</span>
+        <span className="text-[19px] font-bold text-black">{usd(savings)}</span>
       </Link>
 
       <div className="mx-4 mt-3 flex items-center gap-3 rounded-[8px] bg-card px-4 py-4">
@@ -335,7 +337,7 @@ function TopUpRow({
   art: "cashapp" | "depositCash" | "bankTransfer";
   title: string;
   badge: "instant" | "days";
-  to?: "/fund-apps" | "/add-cash" | "/transfer";
+  to?: "/fund-apps" | "/add-cash" | "/transfer" | "/add-money";
 }) {
   const inner = (
     <>

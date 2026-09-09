@@ -1,7 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Check, ChevronDown, ChevronUp, Eye } from "lucide-react";
 import { BackHeader } from "@/components/varo/back-header";
+import { linkedStore } from "@/lib/linked";
 
 export const Route = createFileRoute("/add-debit-card")({
   head: () => ({
@@ -24,8 +25,13 @@ export const Route = createFileRoute("/add-debit-card")({
 const ADDRESS = "1720 Sandy Hollow Loop,  Middleburg, FL 320...";
 
 function AddDebitCardScreen() {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [showCode, setShowCode] = useState(false);
+  const [issuer, setIssuer] = useState("Debit card");
+  const [number, setNumber] = useState("");
+  const [error, setError] = useState("");
+  const cardReady = number.length >= 12;
 
   return (
     <div className="flex min-h-screen flex-col bg-white">
@@ -46,14 +52,32 @@ function AddDebitCardScreen() {
           className="mt-2 w-full rounded-[8px] border border-border px-4 py-4 text-[16px] text-black"
         />
 
+        <label className="mt-5 block text-[13px] font-bold text-black" htmlFor="issuer">
+          Bank or card name
+        </label>
+        <input
+          id="issuer"
+          value={issuer}
+          onChange={(e) => setIssuer(e.target.value)}
+          placeholder="Bank or card name"
+          className="mt-2 w-full rounded-[8px] border border-border px-4 py-4 text-[16px] text-black placeholder:text-[#8b8b90]"
+        />
+
         <label className="mt-5 block text-[13px] font-bold text-black" htmlFor="number">
           Debit card number
         </label>
         <input
           id="number"
+          inputMode="numeric"
+          value={number}
+          onChange={(e) => {
+            setNumber(e.target.value.replace(/\D/g, "").slice(0, 19));
+            setError("");
+          }}
           placeholder="Debit card number"
           className="mt-2 w-full rounded-[8px] border border-border px-4 py-4 text-[16px] text-black placeholder:text-[#8b8b90]"
         />
+
 
         <div className="mt-5 flex gap-4">
           <div className="flex-1">
@@ -124,10 +148,22 @@ function AddDebitCardScreen() {
           Your debit card information is stored securely and can be used for pre-authorized
           transfers and payments.
         </p>
+        {error ? <p className="mt-3 text-[14px] text-[#a4322a]">{error}</p> : null}
         <button
           type="button"
-          disabled
-          className="mt-4 w-full rounded-[8px] bg-[#e4e6ea] py-4 text-[15px] font-bold text-[#9a9ba0]"
+          onClick={() => {
+            if (!cardReady) {
+              setError("Enter a valid debit card number.");
+              return;
+            }
+            linkedStore.add({
+              kind: "card",
+              name: issuer.trim() || "Debit card",
+              last4: number.slice(-4),
+            });
+            navigate({ to: "/linked-cards", replace: true });
+          }}
+          className="mt-4 w-full rounded-[8px] bg-primary py-4 text-[15px] font-bold text-white"
         >
           Next
         </button>
