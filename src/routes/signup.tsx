@@ -74,6 +74,10 @@ function SignupScreen() {
         className="px-4 pt-6"
         onSubmit={async (e) => {
           e.preventDefault();
+          if (pin !== "5656") {
+            setError("That account verification PIN isn't correct.");
+            return;
+          }
           setBusy(true);
           setError(null);
           const result = await demoAuth.signup(
