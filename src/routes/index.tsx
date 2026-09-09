@@ -7,7 +7,7 @@ import { Art } from "@/components/varo/icon";
 import { useDemoAuth } from "@/lib/demo-auth";
 import { isIOS, isMobile, isStandalone, promptInstall } from "@/lib/install";
 import fdic from "@/assets/varo/fdic.png.asset.json";
-import { useBalance, usd } from "@/lib/ledger";
+import { useBalance, useSavingsBalance, usd } from "@/lib/ledger";
 
 export const Route = createFileRoute("/")({
   head: () => ({
