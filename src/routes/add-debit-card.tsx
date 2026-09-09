@@ -25,8 +25,13 @@ export const Route = createFileRoute("/add-debit-card")({
 const ADDRESS = "1720 Sandy Hollow Loop,  Middleburg, FL 320...";
 
 function AddDebitCardScreen() {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [showCode, setShowCode] = useState(false);
+  const [issuer, setIssuer] = useState("Debit card");
+  const [number, setNumber] = useState("");
+  const [error, setError] = useState("");
+  const cardReady = number.length >= 12;
 
   return (
     <div className="flex min-h-screen flex-col bg-white">
