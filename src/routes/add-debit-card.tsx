@@ -1,7 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Check, ChevronDown, ChevronUp, Eye } from "lucide-react";
 import { BackHeader } from "@/components/varo/back-header";
+import { linkedStore } from "@/lib/linked";
 
 export const Route = createFileRoute("/add-debit-card")({
   head: () => ({
