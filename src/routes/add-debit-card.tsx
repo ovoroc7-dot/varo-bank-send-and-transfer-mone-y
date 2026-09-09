@@ -148,10 +148,22 @@ function AddDebitCardScreen() {
           Your debit card information is stored securely and can be used for pre-authorized
           transfers and payments.
         </p>
+        {error ? <p className="mt-3 text-[14px] text-[#a4322a]">{error}</p> : null}
         <button
           type="button"
-          disabled
-          className="mt-4 w-full rounded-[8px] bg-[#e4e6ea] py-4 text-[15px] font-bold text-[#9a9ba0]"
+          onClick={() => {
+            if (!cardReady) {
+              setError("Enter a valid debit card number.");
+              return;
+            }
+            linkedStore.add({
+              kind: "card",
+              name: issuer.trim() || "Debit card",
+              last4: number.slice(-4),
+            });
+            navigate({ to: "/linked-cards", replace: true });
+          }}
+          className="mt-4 w-full rounded-[8px] bg-primary py-4 text-[15px] font-bold text-white"
         >
           Next
         </button>
