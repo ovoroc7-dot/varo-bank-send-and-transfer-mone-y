@@ -337,7 +337,7 @@ function TopUpRow({
   art: "cashapp" | "depositCash" | "bankTransfer";
   title: string;
   badge: "instant" | "days";
-  to?: "/fund-apps" | "/add-cash" | "/transfer";
+  to?: "/fund-apps" | "/add-cash" | "/transfer" | "/add-money";
 }) {
   const inner = (
     <>
