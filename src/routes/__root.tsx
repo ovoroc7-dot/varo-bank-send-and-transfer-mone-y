@@ -139,6 +139,7 @@ function RootComponent() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const chromeless = [
     "/splash",
+    "/welcome",
     "/login",
     "/signup",
     "/transfer",
