@@ -164,6 +164,37 @@
   body {
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    max-width: 100%;
+    overflow-x: hidden;
+    overscroll-behavior-y: none;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    touch-action: pan-y;
+  }
+
+  /* Never let a long word, number or media element push the page sideways */
+  img,
+  svg,
+  video,
+  canvas {
+    max-width: 100%;
+  }
+
+  h1,
+  h2,
+  h3,
+  p,
+  span,
+  button,
+  a {
+    overflow-wrap: break-word;
+  }
+
+  /* iOS zooms the page when a focused field is under 16px */
+  input,
+  select,
+  textarea {
+    font-size: max(16px, 1em);
   }
 }
 
