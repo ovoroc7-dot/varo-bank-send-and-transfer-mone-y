@@ -21,7 +21,7 @@ function SplashScreen() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const t = setTimeout(() => navigate({ to: "/", replace: true }), 2200);
+    const t = setTimeout(() => navigate({ to: "/welcome", replace: true }), 2200);
     return () => clearTimeout(t);
   }, [navigate]);
 
