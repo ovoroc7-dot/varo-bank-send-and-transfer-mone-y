@@ -45,6 +45,7 @@ function LoginScreen() {
 
       <form
         className="mt-12"
+        noValidate
         onSubmit={async (e) => {
           e.preventDefault();
           setTouched(true);
