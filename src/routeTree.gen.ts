@@ -37,6 +37,7 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SplashRouteImport } from './routes/splash'
 import { Route as TransferRouteImport } from './routes/transfer'
 import { Route as VaroCardsRouteImport } from './routes/varo-cards'
+import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as ZelleRouteImport } from './routes/zelle'
 import { Route as TransactionIdRouteImport } from './routes/transaction.$id'
 
@@ -180,6 +181,11 @@ const VaroCardsRoute = VaroCardsRouteImport.update({
   path: '/varo-cards',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WelcomeRoute = WelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ZelleRoute = ZelleRouteImport.update({
   id: '/zelle',
   path: '/zelle',
@@ -220,6 +226,7 @@ export interface FileRoutesByFullPath {
   '/splash': typeof SplashRoute
   '/transfer': typeof TransferRoute
   '/varo-cards': typeof VaroCardsRoute
+  '/welcome': typeof WelcomeRoute
   '/zelle': typeof ZelleRoute
   '/transaction/$id': typeof TransactionIdRoute
 }
@@ -252,6 +259,7 @@ export interface FileRoutesByTo {
   '/splash': typeof SplashRoute
   '/transfer': typeof TransferRoute
   '/varo-cards': typeof VaroCardsRoute
+  '/welcome': typeof WelcomeRoute
   '/zelle': typeof ZelleRoute
   '/transaction/$id': typeof TransactionIdRoute
 }
@@ -285,6 +293,7 @@ export interface FileRoutesById {
   '/splash': typeof SplashRoute
   '/transfer': typeof TransferRoute
   '/varo-cards': typeof VaroCardsRoute
+  '/welcome': typeof WelcomeRoute
   '/zelle': typeof ZelleRoute
   '/transaction/$id': typeof TransactionIdRoute
 }
@@ -319,6 +328,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/transfer'
     | '/varo-cards'
+    | '/welcome'
     | '/zelle'
     | '/transaction/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -351,6 +361,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/transfer'
     | '/varo-cards'
+    | '/welcome'
     | '/zelle'
     | '/transaction/$id'
   id:
@@ -383,6 +394,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/transfer'
     | '/varo-cards'
+    | '/welcome'
     | '/zelle'
     | '/transaction/$id'
   fileRoutesById: FileRoutesById
@@ -416,6 +428,7 @@ export interface RootRouteChildren {
   SplashRoute: typeof SplashRoute
   TransferRoute: typeof TransferRoute
   VaroCardsRoute: typeof VaroCardsRoute
+  WelcomeRoute: typeof WelcomeRoute
   ZelleRoute: typeof ZelleRoute
   TransactionIdRoute: typeof TransactionIdRoute
 }
@@ -618,6 +631,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VaroCardsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/welcome': {
+      id: '/welcome'
+      path: '/welcome'
+      fullPath: '/welcome'
+      preLoaderRoute: typeof WelcomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/zelle': {
       id: '/zelle'
       path: '/zelle'
@@ -664,6 +684,7 @@ const rootRouteChildren: RootRouteChildren = {
   SplashRoute: SplashRoute,
   TransferRoute: TransferRoute,
   VaroCardsRoute: VaroCardsRoute,
+  WelcomeRoute: WelcomeRoute,
   ZelleRoute: ZelleRoute,
   TransactionIdRoute: TransactionIdRoute,
 }
