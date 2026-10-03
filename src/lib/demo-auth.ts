@@ -5,6 +5,16 @@ import { supabase } from "@/integrations/supabase/client";
 // transaction history follow them to any device.
 let loggedIn = false;
 let currentUserId: string | null = null;
+export type Profile = {
+  first_name?: string; last_name?: string; phone?: string; email?: string;
+  street?: string; apt?: string; city?: string; state?: string; zip?: string; joined?: string;
+};
+let profile: Profile | null = null;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function setProfile(session: any) {
+  const u = session?.user;
+  profile = u ? { ...(u.user_metadata ?? {}), email: u.email, joined: u.created_at } : null;
+}
 const listeners = new Set<() => void>();
 
 function emit() {
@@ -15,11 +25,13 @@ if (typeof window !== "undefined") {
   void supabase.auth.getSession().then(({ data }) => {
     loggedIn = !!data.session;
     currentUserId = data.session?.user.id ?? null;
+    setProfile(data.session);
     emit();
   });
   supabase.auth.onAuthStateChange((_event, session) => {
     loggedIn = !!session;
     currentUserId = session?.user.id ?? null;
+    setProfile(session);
     emit();
   });
 }
@@ -52,6 +64,7 @@ export const demoAuth = {
     await supabase.auth.signOut();
   },
   isLoggedIn: () => loggedIn,
+  profile: () => profile,
   userId: () => currentUserId,
   subscribe(listener: () => void) {
     listeners.add(listener);
@@ -61,4 +74,8 @@ export const demoAuth = {
 
 export function useDemoAuth() {
   return useSyncExternalStore(demoAuth.subscribe, demoAuth.isLoggedIn, () => false);
+}
+
+export function useProfile() {
+  return useSyncExternalStore(demoAuth.subscribe, demoAuth.profile, () => null);
 }

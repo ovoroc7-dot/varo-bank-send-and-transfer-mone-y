@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { Chevron, Divider } from "@/components/varo/ui";
-import { demoAuth } from "@/lib/demo-auth";
+import { demoAuth, useProfile } from "@/lib/demo-auth";
 
 export const Route = createFileRoute("/my-varo")({
   head: () => ({
@@ -29,6 +29,10 @@ const account = [
 
 function MyVaroScreen() {
   const navigate = useNavigate();
+  const p = useProfile();
+  const name = [p?.first_name, p?.last_name].filter(Boolean).join(" ") || p?.email || "";
+  const initials = ((p?.first_name?.[0] ?? "") + (p?.last_name?.[0] ?? "")).toUpperCase() || (p?.email?.[0] ?? "").toUpperCase();
+  const joined = p?.joined ? new Date(p.joined).toLocaleDateString("en-US", { month: "long", year: "numeric" }) : "";
 
   return (
     <div className="min-h-screen bg-card pb-6">
@@ -36,11 +40,11 @@ function MyVaroScreen() {
 
       <div className="flex items-center gap-4 px-4 pt-8 pb-6">
         <span className="grid size-[46px] place-items-center rounded-full bg-[#123024] text-[16px] font-bold text-white">
-          JJ
+          {initials}
         </span>
         <span>
-          <span className="block text-[17px] text-black">Joann Juckett</span>
-          <span className="block text-[14px] text-[#5f6065]">Joined July 2025</span>
+          <span className="block text-[17px] text-black">{name}</span>
+          <span className="block text-[14px] text-[#5f6065]">{joined ? `Joined ${joined}` : ""}</span>
         </span>
       </div>
 
