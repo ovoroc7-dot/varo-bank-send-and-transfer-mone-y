@@ -33,11 +33,15 @@ export const demoAuth = {
     email: string,
     password: string,
     phone?: string,
+    profile?: Record<string, string>,
   ): Promise<{ error: string | null; needsConfirmation: boolean }> {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      ...(phone ? { options: { data: { phone } } } : {}),
+      options: {
+        emailRedirectTo: typeof window !== "undefined" ? window.location.origin : undefined,
+        data: { ...(profile ?? {}), ...(phone ? { phone } : {}) },
+      },
     });
     return {
       error: error ? error.message : null,
