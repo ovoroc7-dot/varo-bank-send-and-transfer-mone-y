@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Pencil, ChevronRight, UserRound } from "lucide-react";
+import { useProfile } from "@/lib/demo-auth";
 import { BackHeader, Toggle } from "@/components/varo/back-header";
 
 export const Route = createFileRoute("/personal-details")({
@@ -23,6 +24,10 @@ export const Route = createFileRoute("/personal-details")({
 
 function PersonalDetailsScreen() {
   const [faceId, setFaceId] = useState(true);
+  const p = useProfile();
+  const name = [p?.first_name, p?.last_name].filter(Boolean).join(" ") || "—";
+  const addr = [[p?.street, p?.apt].filter(Boolean).join(", "), p?.city, [p?.state, p?.zip].filter(Boolean).join(" "), p?.street ? "US" : ""].filter(Boolean).join(", ") || "—";
+  const phone = p?.phone ? `+1 ${p.phone}` : "—";
 
   return (
     <div className="min-h-screen bg-white pb-10">
@@ -38,10 +43,10 @@ function PersonalDetailsScreen() {
       </div>
 
       <div className="mt-6">
-        <Field label="Name" value="Joann Juckett" />
-        <Field label="Home address" value="1720 Sandy Hollow Loop, Middleburg, FL, 32068, US" edit />
-        <Field label="Phone number" value="+1 (973) 570-8030" edit />
-        <Field label="Email address" value="joannjuckett@gmail.com" edit />
+        <Field label="Name" value={name} />
+        <Field label="Home address" value={addr} edit />
+        <Field label="Phone number" value={phone} edit />
+        <Field label="Email address" value={p?.email ?? "—"} edit />
       </div>
 
       <p className="px-4 pt-6 pb-2 text-[15px] font-bold text-black">Security</p>

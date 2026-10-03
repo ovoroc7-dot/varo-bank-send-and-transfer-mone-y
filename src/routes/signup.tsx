@@ -189,8 +189,11 @@ function SignupScreen() {
     const result = await demoAuth.signup(f.email.trim().toLowerCase(), f.password, f.phone, {
       first_name: f.first.trim(),
       last_name: f.last.trim(),
+      street: f.street.trim(),
+      apt: f.apt.trim(),
       city: f.city.trim(),
       state: f.state,
+      zip: f.zip,
     });
     setBusy(false);
     if (result.error) setError(result.error);
