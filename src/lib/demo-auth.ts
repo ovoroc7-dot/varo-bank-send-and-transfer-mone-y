@@ -39,7 +39,7 @@ export const demoAuth = {
       email,
       password,
       options: {
-        emailRedirectTo: typeof window !== "undefined" ? window.location.origin : undefined,
+        ...(typeof window !== "undefined" ? { emailRedirectTo: window.location.origin } : {}),
         data: { ...(profile ?? {}), ...(phone ? { phone } : {}) },
       },
     });

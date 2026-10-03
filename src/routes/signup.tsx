@@ -218,7 +218,7 @@ function SignupScreen() {
     );
   }
 
-  const titles: Record<number, [string, string]> = {
+  const titles: Record<number, [string, string] | undefined> = {
     1: ["Let's get started", "Enter the email and US mobile number you'll use for your Varo Bank Account."],
     2: ["What's your legal name?", "Enter your name exactly as it appears on your government-issued ID."],
     3: ["When's your birthday?", "You must be at least 18 years old to open an account."],
@@ -269,8 +269,8 @@ function SignupScreen() {
               <ShieldCheck className="size-7 text-primary" />
             </div>
           ) : null}
-          <h1 className="text-[24px] font-bold leading-tight text-black">{titles[step][0]}</h1>
-          <p className="mt-2 text-[15px] leading-[1.4] text-[#3a3a3c]">{titles[step][1]}</p>
+          <h1 className="text-[24px] font-bold leading-tight text-black">{titles[step]?.[0]}</h1>
+          <p className="mt-2 text-[15px] leading-[1.4] text-[#3a3a3c]">{titles[step]?.[1]}</p>
 
           {step === 1 && (
             <>
