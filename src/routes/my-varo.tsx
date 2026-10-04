@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { Chevron, Divider } from "@/components/varo/ui";
 import { demoAuth, useProfile } from "@/lib/demo-auth";
+import { useAvatarUrl } from "@/lib/avatar";
 
 export const Route = createFileRoute("/my-varo")({
   head: () => ({
@@ -30,6 +31,7 @@ const account = [
 function MyVaroScreen() {
   const navigate = useNavigate();
   const p = useProfile();
+  const avatar = useAvatarUrl();
   const name = [p?.first_name, p?.last_name].filter(Boolean).join(" ") || p?.email || "";
   const initials = ((p?.first_name?.[0] ?? "") + (p?.last_name?.[0] ?? "")).toUpperCase() || (p?.email?.[0] ?? "").toUpperCase();
   const joined = p?.joined ? new Date(p.joined).toLocaleDateString("en-US", { month: "long", year: "numeric" }) : "";
@@ -39,9 +41,9 @@ function MyVaroScreen() {
       <h1 className="varo-title px-4 pt-14 text-[27px]">MY VARO</h1>
 
       <div className="flex items-center gap-4 px-4 pt-8 pb-6">
-        <span className="grid size-[46px] place-items-center rounded-full bg-[#123024] text-[16px] font-bold text-white">
-          {initials}
-        </span>
+        <Link to="/personal-details" className="grid size-[46px] shrink-0 place-items-center overflow-hidden rounded-full bg-[#123024] text-[16px] font-bold text-white">
+          {avatar ? <img src={avatar} alt="Profile photo" className="size-full object-cover" /> : initials}
+        </Link>
         <span>
           <span className="block text-[17px] text-black">{name}</span>
           <span className="block text-[14px] text-[#5f6065]">{joined ? `Joined ${joined}` : ""}</span>
