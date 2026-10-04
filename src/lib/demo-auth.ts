@@ -7,7 +7,7 @@ let loggedIn = false;
 let currentUserId: string | null = null;
 export type Profile = {
   first_name?: string; last_name?: string; phone?: string; email?: string;
-  street?: string; apt?: string; city?: string; state?: string; zip?: string; joined?: string;
+  street?: string; apt?: string; city?: string; state?: string; zip?: string; joined?: string; avatar_path?: string | null;
 };
 let profile: Profile | null = null;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
