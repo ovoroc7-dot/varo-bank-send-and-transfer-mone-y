@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import welcomePhoneCard from "@/assets/varo/welcome-phone-card.png";
+import welcomePhoneCard from "@/assets/varo/welcome-phone-card.jpg";
 
 export const Route = createFileRoute("/welcome")({
   head: () => ({
