@@ -66,7 +66,7 @@ export function Art({
   className?: string;
 }) {
   return (
-    <img
+    <img loading="lazy" decoding="async"
       src={art[name].url}
       alt=""
       aria-hidden
