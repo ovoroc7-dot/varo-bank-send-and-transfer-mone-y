@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, Settings, ChevronRight } from "lucide-react";
 import coins from "@/assets/varo/coins.png.asset.json";
+import { useSavingsBalance, useTransactions, usd, txnDate } from "@/lib/ledger";
 import piggy from "@/assets/varo/piggy.png.asset.json";
 
 export const Route = createFileRoute("/savings")({
@@ -27,6 +28,8 @@ export const Route = createFileRoute("/savings")({
 
 function SavingsScreen() {
   const navigate = useNavigate();
+  const balance = useSavingsBalance();
+  const txns = useTransactions().filter((t) => t.account === "savings");
 
   return (
     <div className="min-h-screen bg-white">
@@ -42,7 +45,7 @@ function SavingsScreen() {
 
       <section className="px-4 pt-6">
         <p className="text-center text-[16px] font-bold text-black">Available balance</p>
-        <p className="varo-title mt-2 text-center text-[40px] leading-none text-black">$0.00</p>
+        <p className="varo-title mt-2 text-center text-[40px] leading-none text-black">{usd(balance)}</p>
 
         <div className="mt-8">
           <Row label="Interest earned">
@@ -93,10 +96,26 @@ function SavingsScreen() {
 
       <section className="px-4 pt-5 pb-16">
         <h2 className="text-[16px] font-bold text-black">Recent transactions</h2>
-        <div className="flex flex-col items-center pt-16 pb-10">
-          <img src={coins.url} alt="Stack of coins" className="w-[130px]" />
-          <p className="mt-10 text-[17px] text-[#6f7075]">Your activity will be shown here</p>
-        </div>
+        {txns.length ? (
+          <ul className="mt-2">
+            {txns.map((t) => (
+              <li key={t.id} className="flex items-center gap-3 border-b border-[#e2e3e6] py-4">
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-[16px] text-black">{t.name}</span>
+                  <span className="block text-[13px] text-[#6f7075]">{txnDate(t.date)}</span>
+                </span>
+                <span className={`shrink-0 text-[16px] font-bold ${t.amount > 0 ? "text-[#177d4e]" : "text-black"}`}>
+                  {t.amount > 0 ? "+" : "-"}{usd(Math.abs(t.amount))}
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className="flex flex-col items-center pt-16 pb-10">
+            <img src={coins.url} alt="Stack of coins" className="w-[130px]" />
+            <p className="mt-10 text-[17px] text-[#6f7075]">Your activity will be shown here</p>
+          </div>
+        )}
       </section>
     </div>
   );
