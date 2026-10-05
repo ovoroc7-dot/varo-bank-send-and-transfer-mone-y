@@ -37,8 +37,19 @@ if (typeof window !== "undefined") {
 }
 
 export const demoAuth = {
-  async login(email: string, password: string): Promise<string | null> {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+  async login(identifier: string, password: string): Promise<string | null> {
+    const id = identifier.trim();
+    if (!id.includes("@")) {
+      const { loginWithPhone } = await import("@/lib/phone-login.functions");
+      const r = await loginWithPhone({ data: { phone: id, password } });
+      if (r.error || !("access_token" in r)) return r.error ?? "Invalid login credentials";
+      const { error } = await supabase.auth.setSession({
+        access_token: r.access_token!,
+        refresh_token: r.refresh_token!,
+      });
+      return error ? error.message : null;
+    }
+    const { error } = await supabase.auth.signInWithPassword({ email: id.toLowerCase(), password });
     return error ? error.message : null;
   },
   async signup(
