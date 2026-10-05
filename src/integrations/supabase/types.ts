@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      linked_accounts: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          last4: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind: string
+          last4: string
+          name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          last4?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       transactions: {
         Row: {
           account: string
