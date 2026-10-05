@@ -39,17 +39,15 @@ if (typeof window !== "undefined") {
 export const demoAuth = {
   async login(identifier: string, password: string): Promise<string | null> {
     const id = identifier.trim();
+    let email = id.toLowerCase();
     if (!id.includes("@")) {
-      const { loginWithPhone } = await import("@/lib/phone-login.functions");
-      const r = await loginWithPhone({ data: { phone: id, password } });
-      if (r.error || !("access_token" in r)) return r.error ?? "Invalid login credentials";
-      const { error } = await supabase.auth.setSession({
-        access_token: r.access_token!,
-        refresh_token: r.refresh_token!,
-      });
-      return error ? error.message : null;
+      // Phone login: find the account's email, then sign in normally.
+      // Runs entirely in the browser so it works on any host (e.g. Vercel).
+      const { data } = await supabase.rpc("email_for_phone", { _phone: id });
+      if (!data) return "Invalid login credentials";
+      email = data as string;
     }
-    const { error } = await supabase.auth.signInWithPassword({ email: id.toLowerCase(), password });
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
     return error ? error.message : null;
   },
   async signup(
