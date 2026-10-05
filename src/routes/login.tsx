@@ -52,10 +52,10 @@ function LoginScreen() {
           if (!identifier.trim() || !password) return;
           setBusy(true);
           setError(null);
-          const err = await demoAuth.login(identifier.trim().toLowerCase(), password);
+          const err = await demoAuth.login(identifier.trim(), password);
           setBusy(false);
           if (err) {
-            setError("That email address or password doesn't match our records.");
+            setError("That email, phone number or password doesn't match our records.");
           } else {
             navigate({ to: "/", replace: true });
           }
@@ -66,8 +66,8 @@ function LoginScreen() {
         </label>
         <input
           id="identifier"
-          type="email"
-          autoComplete="email"
+          type="text"
+          autoComplete="username" inputMode="email"
           value={identifier}
           onChange={(e) => setIdentifier(e.target.value)}
           onBlur={() => setTouched(true)}
