@@ -19,7 +19,7 @@ export const loginWithPhone = createServerFn({ method: "POST" })
       const { data: res, error } = await supabaseAdmin.auth.admin.listUsers({ page, perPage: 1000 });
       if (error) return { error: "Login is unavailable right now. Try again." };
       for (const u of res.users) {
-        const p = (u.user_metadata?.phone as string | undefined) ?? u.phone ?? "";
+        const p = (u.user_metadata?.["phone"] as string | undefined) ?? u.phone ?? "";
         if (p && digits(p) === target) {
           email = u.email ?? null;
           break;
@@ -29,7 +29,7 @@ export const loginWithPhone = createServerFn({ method: "POST" })
     }
     const invalid = { error: "Invalid login credentials" };
     if (!email) return invalid;
-    const client = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_PUBLISHABLE_KEY!, {
+    const client = createClient(process.env["SUPABASE_URL"]!, process.env["SUPABASE_PUBLISHABLE_KEY"]!, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
     const { data: s, error } = await client.auth.signInWithPassword({ email, password: data.password });
