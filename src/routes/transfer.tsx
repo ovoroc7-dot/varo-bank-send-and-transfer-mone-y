@@ -206,8 +206,8 @@ function TransferScreen() {
   }
 
   return (
-    <div className="relative min-h-screen bg-white">
-      <header className="flex items-center gap-4 px-4 pt-3 pb-4">
+    <div className="relative flex h-dvh flex-col overflow-hidden bg-white pb-[env(safe-area-inset-bottom)]">
+      <header className="flex shrink-0 items-center gap-4 px-4 py-2">
         <button
           type="button"
           onClick={() => {
@@ -231,7 +231,7 @@ function TransferScreen() {
           <button
             type="button"
             onClick={() => setSheet(key)}
-            className="flex w-full items-center gap-4 border-b border-border py-4 text-left"
+            className="flex min-h-[58px] w-full items-center gap-3 border-b border-border py-2 text-left"
           >
             <span className="w-11 text-[13px] font-bold text-black">{label}</span>
             <span className="flex size-[42px] items-center justify-center rounded-[6px] bg-[#f1f1f4]">
@@ -245,47 +245,45 @@ function TransferScreen() {
         </div>
       ))}
 
-      <p className="varo-title mt-14 text-center text-[54px] leading-none text-black">{amount}</p>
-      {from ? (
-        <p className="mt-2 text-center text-[14px] text-[#6f7075]">
-          Available {usd(sourceBalance)}
-        </p>
-      ) : null}
-      {fee ? (
-        <p className="mt-1 text-center text-[14px] text-[#6f7075]">BIC fee {usd(fee)}</p>
-      ) : null}
+      <div className="shrink-0 px-4 py-1 text-center">
+        <p className="varo-title truncate text-[44px] leading-none text-black">{amount}</p>
+        <div className="mt-1 min-h-5 text-[13px] leading-5 text-[#6f7075]">
+          {from ? <span>Available {usd(sourceBalance)}</span> : null}
+          {fee ? <span>{from ? " · " : ""}BIC fee {usd(fee)}</span> : null}
+        </div>
+        {error ? (
+          <p role="alert" className="mt-1 rounded-[6px] bg-[#fdeceb] px-3 py-1 text-left text-[12px] leading-4 text-[#a4322a]">
+            {error}
+          </p>
+        ) : null}
+      </div>
 
-      {error ? (
-        <p className="mx-4 mt-4 rounded-[8px] bg-[#fdeceb] px-4 py-3 text-[14px] leading-[1.45] text-[#a4322a]">
-          {error}
-        </p>
-      ) : null}
-
-      <div className="mt-6 flex items-start gap-3 px-4">
-        <img src={fdic.url} alt="" aria-hidden className="mt-[2px] h-[18px] w-auto" />
-        <p className="text-[15px] leading-[1.35] text-black">
+      <div className="flex shrink-0 items-center gap-2 px-4 py-1">
+        <img src={fdic.url} alt="" aria-hidden className="h-[14px] w-auto shrink-0" />
+        <p className="text-[11px] leading-[1.25] text-black">
           FDIC-Insured – Backed by the full faith and credit of the U.S. Government
         </p>
       </div>
 
-      <div className="px-4 pt-8">
+      <div className="shrink-0 px-4 pt-1">
         <button
           type="button"
           onClick={next}
           disabled={!ready}
-          className="h-[52px] w-full rounded-[8px] bg-[#e3e6ea] text-[16px] text-[#9a9ba0] enabled:bg-primary enabled:font-bold enabled:text-white"
+          className="h-12 w-full rounded-[8px] bg-[#e3e6ea] text-[16px] text-[#9a9ba0] enabled:bg-primary enabled:font-bold enabled:text-white"
         >
           Next
         </button>
       </div>
 
-      <div className="grid grid-cols-3 pt-4 pb-6">
+      <div className="grid min-h-0 flex-1 grid-cols-3 grid-rows-4 pt-1 pb-1">
         {keys.map((k) => (
           <button
             key={k}
             type="button"
             onClick={() => press(k)}
-            className="flex h-[74px] items-center justify-center text-[24px] text-[#6f7075]"
+            aria-label={k === "del" ? "Delete last digit" : k}
+            className="flex min-h-0 items-center justify-center text-[24px] text-[#6f7075] active:bg-secondary"
           >
             {k === "del" ? <Delete className="size-7 text-[#4b4c50]" strokeWidth={1.6} /> : k}
           </button>
