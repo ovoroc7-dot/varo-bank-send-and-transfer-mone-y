@@ -50,6 +50,7 @@ export type Database = {
           id: string
           name: string
           note: string | null
+          reversal_of: string | null
           status: string
           user_id: string
         }
@@ -61,6 +62,7 @@ export type Database = {
           id?: string
           name: string
           note?: string | null
+          reversal_of?: string | null
           status?: string
           user_id: string
         }
@@ -72,10 +74,19 @@ export type Database = {
           id?: string
           name?: string
           note?: string | null
+          reversal_of?: string | null
           status?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "transactions_reversal_of_fkey"
+            columns: ["reversal_of"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
@@ -83,6 +94,7 @@ export type Database = {
     }
     Functions: {
       email_for_phone: { Args: { _phone: string }; Returns: string }
+      reverse_expired_pending_transactions: { Args: never; Returns: number }
     }
     Enums: {
       [_ in never]: never
