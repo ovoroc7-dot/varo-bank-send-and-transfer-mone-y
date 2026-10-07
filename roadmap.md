@@ -4,5 +4,4 @@
 - [ ] Make home direct-deposit setup usable.
 - [ ] Add functional Varo Believe Card actions.
 - [ ] Allow editing personal details.
-- [ ] Automatically reverse pending transfers when their fee is not cleared within 24 hours; show the reversal reason in activity and receipts.
-- [ ] Provide a support-chat action from transaction receipts for reporting problems.
+- [ ] Replace the requested fee-triggered reversal and Varo-branded support chat with a conspicuously demo-only, non-payment simulation; no real fees, real transfer claims, or impersonated bank-support channel.
