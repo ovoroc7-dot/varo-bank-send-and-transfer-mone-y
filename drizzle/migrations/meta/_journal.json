@@ -36,6 +36,20 @@
       "when": 1791177214935,
       "tag": "0004_phone_login_lookup",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1791346288931,
+      "tag": "0005_allow_owner_transaction_status_updates",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791346347590,
+      "tag": "0006_pending_transfer_reversal",
+      "breakpoints": true
     }
   ]
 }
