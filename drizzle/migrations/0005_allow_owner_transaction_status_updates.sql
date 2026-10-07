@@ -1,0 +1,8 @@
+GRANT UPDATE ON public.transactions TO authenticated;
+
+CREATE POLICY "Users can update their own transactions"
+  ON public.transactions
+  FOR UPDATE
+  TO authenticated
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
