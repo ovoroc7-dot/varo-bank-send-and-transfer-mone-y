@@ -9,7 +9,7 @@ export type Txn = {
   note?: string;
   amount: number; // negative = money out, positive = money in
   date: string; // ISO
-  status?: "pending" | "completed";
+  status?: "pending" | "completed" | "reversed";
   fee?: number; // BIC fee charged on top of the amount
   account?: VaroAccount; // which Varo account the money moved through
 };
@@ -90,10 +90,18 @@ function migrateLegacy() {
   }
 }
 
+async function reverseExpiredPendingTransactions() {
+  const { data, error } = await supabase.rpc("reverse_expired_pending_transactions");
+  if (error) return false;
+  return Number(data) > 0;
+}
+
 /** Pull the user's transactions from the cloud and push any local-only ones up. */
 async function refreshFromCloud() {
   const userId = currentUserId;
   if (!userId) return;
+  await reverseExpiredPendingTransactions();
+  if (currentUserId !== userId) return;
   const { data, error } = await supabase
     .from("transactions")
     .select("*")
@@ -106,7 +114,12 @@ async function refreshFromCloud() {
     ...(r.note ? { note: r.note } : {}),
     amount: Number(r.amount),
     date: r.created_at,
-    status: r.status === "pending" ? ("pending" as const) : ("completed" as const),
+    status:
+      r.status === "pending"
+        ? "pending"
+        : r.status === "reversed"
+          ? "reversed"
+          : "completed",
     ...(Number(r.fee) ? { fee: Number(r.fee) } : {}),
     account: r.account === "savings" ? ("savings" as const) : ("checking" as const),
   }));
@@ -173,6 +186,15 @@ if (typeof window !== "undefined") {
     } else {
       txns = [];
       emit();
+    }
+  });
+
+  window.setInterval(() => {
+    if (currentUserId) void refreshFromCloud();
+  }, 60_000);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible" && currentUserId) {
+      void refreshFromCloud();
     }
   });
 }

@@ -50,6 +50,20 @@
       "when": 1791346347590,
       "tag": "0006_pending_transfer_reversal",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1791436640916,
+      "tag": "0007_limit_transaction_updates_to_status",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1791436820627,
+      "tag": "0008_schedule_pending_transfer_reversals",
+      "breakpoints": true
     }
   ]
 }
