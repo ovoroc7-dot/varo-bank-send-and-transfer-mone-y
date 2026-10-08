@@ -222,13 +222,13 @@ export const ledger = {
   /** Checking (Varo Bank Account) balance. */
   getBalance(): number {
     return txns
-      .filter((t) => accountOf(t) === "checking" && t.status !== "reversed")
+      .filter((t) => accountOf(t) === "checking")
       .reduce((sum, t) => sum + t.amount - (t.fee ?? 0), STARTING_BALANCE);
   },
   /** Varo Savings Account balance. */
   getSavingsBalance(): number {
     return txns
-      .filter((t) => accountOf(t) === "savings" && t.status !== "reversed")
+      .filter((t) => accountOf(t) === "savings")
       .reduce((sum, t) => sum + t.amount - (t.fee ?? 0), 0);
   },
   /** Records money leaving the Varo Bank Account. Amount is a positive dollar value. */
