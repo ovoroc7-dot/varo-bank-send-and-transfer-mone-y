@@ -119,9 +119,15 @@ function RecentTransactions({ tab }: { tab: Tab }) {
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-[16px] text-black">{t.name}</span>
                         <span className="flex items-center gap-2 truncate text-[14px] text-[#6f7075]">
-                          {t.status === "pending" ? (
-                            <span className="rounded-full bg-[#fdf0cf] px-2 py-[1px] text-[12px] font-bold text-[#8a6300]">
-                              Pending
+                          {t.status === "pending" || t.status === "reversed" ? (
+                            <span
+                              className={`rounded-full px-2 py-[1px] text-[12px] font-bold ${
+                                t.status === "pending"
+                                  ? "bg-[#fdf0cf] text-[#8a6300]"
+                                  : "bg-[#eceef1] text-[#5f6065]"
+                              }`}
+                            >
+                              {t.status === "pending" ? "Pending" : "Reversed"}
                             </span>
                           ) : null}
                           <span className="truncate">

@@ -188,6 +188,15 @@ if (typeof window !== "undefined") {
       emit();
     }
   });
+
+  window.setInterval(() => {
+    if (currentUserId) void refreshFromCloud();
+  }, 60_000);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible" && currentUserId) {
+      void refreshFromCloud();
+    }
+  });
 }
 
 function record(txn: Txn) {
