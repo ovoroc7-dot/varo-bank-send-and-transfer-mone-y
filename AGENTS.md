@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## Transaction reversal behavior
+- Pending demo-transfer expiry and return credits are applied atomically by a user-scoped database function during signed-in ledger refresh, so status and balances stay consistent across devices.
