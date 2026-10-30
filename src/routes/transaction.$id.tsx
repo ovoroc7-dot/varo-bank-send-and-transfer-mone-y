@@ -65,11 +65,16 @@ function TransactionDetail() {
                 txn.status === "pending" ? "bg-[#fdf0cf] text-[#8a6300]" : "bg-lime text-black"
               }`}
             >
-              {txn.status === "pending" ? "Pending" : "Completed"}
+              {txn.status === "pending" ? "Pending" : txn.status === "reversed" ? "Reversed" : "Completed"}
             </span>
             {txn.status === "pending" ? (
               <p className="mt-3 px-4 text-center text-[14px] leading-[1.4] text-[#6f7075]">
                 This transfer is under review and will stay pending until it clears.
+              </p>
+            ) : null}
+            {txn.status === "reversed" ? (
+              <p className="mt-3 px-4 text-center text-[14px] leading-[1.4] text-[#6f7075]">
+                Reversed: this demo transfer stayed pending for 24 hours, so the amount and BIC fee were returned to your account.
               </p>
             ) : null}
           </section>
@@ -78,7 +83,7 @@ function TransactionDetail() {
 
           <section className="px-4 pt-2">
             {[
-              ["Status", txn.status === "pending" ? "Pending review" : "Completed"],
+              ["Status", txn.status === "pending" ? "Pending review" : txn.status === "reversed" ? "Reversed — refunded" : "Completed"],
               [txn.amount < 0 ? "Sent to" : "Received from", txn.name],
               ["Type", txn.amount < 0 ? "Varo to Anyone" : "Deposit"],
               [txn.amount < 0 ? "From account" : "To account", "Varo Bank Account \u2022 3046"],
