@@ -94,7 +94,6 @@ export type Database = {
     }
     Functions: {
       email_for_phone: { Args: { _phone: string }; Returns: string }
-      reverse_all_expired_pending_transactions: { Args: never; Returns: number }
       reverse_expired_pending_transactions: { Args: never; Returns: number }
     }
     Enums: {
