@@ -9,7 +9,7 @@ export type Txn = {
   note?: string;
   amount: number; // negative = money out, positive = money in
   date: string; // ISO
-  status?: "pending" | "completed";
+  status?: "pending" | "completed" | "reversed";
   fee?: number; // BIC fee charged on top of the amount
   account?: VaroAccount; // which Varo account the money moved through
 };
@@ -94,6 +94,7 @@ function migrateLegacy() {
 async function refreshFromCloud() {
   const userId = currentUserId;
   if (!userId) return;
+  await supabase.rpc("reverse_expired_pending_transactions");
   const { data, error } = await supabase
     .from("transactions")
     .select("*")
@@ -106,7 +107,7 @@ async function refreshFromCloud() {
     ...(r.note ? { note: r.note } : {}),
     amount: Number(r.amount),
     date: r.created_at,
-    status: r.status === "pending" ? ("pending" as const) : ("completed" as const),
+    status: r.status === "pending" ? ("pending" as const) : r.status === "reversed" ? ("reversed" as const) : ("completed" as const),
     ...(Number(r.fee) ? { fee: Number(r.fee) } : {}),
     account: r.account === "savings" ? ("savings" as const) : ("checking" as const),
   }));
