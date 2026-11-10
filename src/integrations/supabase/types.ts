@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.5"
+    PostgrestVersion: "14.17"
   }
   public: {
     Tables: {
@@ -94,6 +94,7 @@ export type Database = {
     }
     Functions: {
       email_for_phone: { Args: { _phone: string }; Returns: string }
+      reverse_all_expired_pending_transactions: { Args: never; Returns: number }
       reverse_expired_pending_transactions: { Args: never; Returns: number }
     }
     Enums: {
