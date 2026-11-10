@@ -74,7 +74,7 @@ function TransactionDetail() {
             ) : null}
             {txn.status === "reversed" ? (
               <p className="mt-3 px-4 text-center text-[14px] leading-[1.4] text-[#6f7075]">
-                Reversed: this demo transfer stayed pending for 24 hours, so the amount and BIC fee were returned to your account.
+                Reversed: this transfer stayed pending for 24 hours, so the amount and BIC fee were returned to your account.
               </p>
             ) : null}
           </section>
